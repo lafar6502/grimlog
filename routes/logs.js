@@ -15,8 +15,10 @@ router.get('/', function(req, res, next) {
             res.render('loglist', { files: files });
         };
     });
-    
-  
+});
+
+router.get('/show/:id', function(req, res, next) {
+    res.render('showlog', { });
 });
 
 module.exports = router;
