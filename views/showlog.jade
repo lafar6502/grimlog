@@ -2,13 +2,16 @@ extends layout
 
 block content
   h1='Log view'
-  p 
-  ul
+  form
+    input(type='hidden', name='start', value=query.start)
+    input(type='hidden', name='limit')
+    input(type='hidden', name='sort')
+    input(type='hidden', name='dir')
+    input(type='hidden', name='level')
+
+  div(class='container-fluid logtxt')
     each m in messages
         div(class='row')
-            div= m.ts
-            div= m.source
-            div= m.level
-            div= m.logname
-            div= m.message
+            div(class='col-md-4') #{m.ts}|#{m.level}| #{m.logname}| #{m.source}
+            div(class='col-md-8')= m.message
     
