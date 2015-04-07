@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1='Log view'
+  p 
+  ul
+    each m in messages
+        div(class='row')
+            div= m.ts
+            div= m.source
+            div= m.level
+            div= m.logname
+            div= m.message
+    

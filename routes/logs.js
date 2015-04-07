@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
+var glog = require('glog');
 
 var logdir = __dirname + '/../../glogs/';
 
@@ -17,8 +18,21 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/show/:id', function(req, res, next) {
-    res.render('showlog', { });
+router.get('/showlog/:id', function(req, res, next) {
+    var lr = glog.openLogSearcher({
+        fileName: logdir + '/' + req.params.id
+    });
+    
+    var query = {
+    };
+    
+    lr.search(query, 0, 100, 'entryid', 'asc', {}, function(s, r) {
+        lr.close();
+        console.log('result', s, r);
+        res.render('showlog', {messages: r});
+    });
+    
+    
 });
 
 module.exports = router;
