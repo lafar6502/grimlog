@@ -1,0 +1,43 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\tools\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\tools\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'git://github.com/lafar6502/glog.git#master',
+1 verbose cli   '--debug' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose node symlink C:\tools\nodejs\\node.exe
+5 verbose readDependencies using package.json deps
+6 verbose cache add [ 'git://github.com/lafar6502/glog.git#master', null ]
+7 verbose cache add name=undefined spec="git://github.com/lafar6502/glog.git#master" args=["git://github.com/lafar6502/glog.git#master",null]
+8 verbose parsed url { protocol: 'git:',
+8 verbose parsed url   slashes: true,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: 'github.com',
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: 'github.com',
+8 verbose parsed url   hash: '#master',
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: '/lafar6502/glog.git',
+8 verbose parsed url   path: '/lafar6502/glog.git',
+8 verbose parsed url   href: 'git://github.com/lafar6502/glog.git#master' }
+9 silly lockFile a0f87502-it-github-com-lafar6502-glog-git git://github.com/lafar6502/glog.git
+10 verbose lock git://github.com/lafar6502/glog.git C:\Users\Rafal\AppData\Roaming\npm-cache\a0f87502-it-github-com-lafar6502-glog-git.lock
+11 verbose addRemoteGit [ 'git://github.com/lafar6502/glog.git', 'master' ]
+12 error git clone git://github.com/lafar6502/glog.git undefined
+12 error git clone git://github.com/lafar6502/glog.git undefined
+13 silly lockFile a0f87502-it-github-com-lafar6502-glog-git git://github.com/lafar6502/glog.git
+14 silly lockFile a0f87502-it-github-com-lafar6502-glog-git git://github.com/lafar6502/glog.git
+15 error not found: git
+16 error Failed using git.
+16 error This is most likely not a problem with npm itself.
+16 error Please check if you have git installed and in your PATH.
+17 error System Windows_NT 6.2.9200
+18 error command "C:\\tools\\nodejs\\\\node.exe" "C:\\tools\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "--save" "git://github.com/lafar6502/glog.git#master" "--debug"
+19 error cwd C:\sbsdev\glogv
+20 error node -v v0.10.33
+21 error npm -v 1.4.28
+22 error code ENOGIT
+23 verbose exit [ 1, true ]
