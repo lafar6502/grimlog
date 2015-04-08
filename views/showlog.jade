@@ -7,14 +7,14 @@ block content
                 div(class='container-fluid')
                     div(class='row')
                         div(class='col-md-9 form-inline')
-                            input(type='hidden', name='start')
-                            input(type='hidden', name='limit')
+                            input(type='hidden', name='start', value=query.start)
+                            input(type='hidden', name='limit', value=query.limit)
                             input(type='hidden', name='sort')
                             input(type='hidden', name='dir')
                             input(type='hidden', name='level')            
                             div(class='form-group', style='display: inline-block')
                                 label() Log name: 
-                                input(type='text',name='logname',class='form-control')
+                                input(type='text',name='logname',class='form-control',value=query.logname)
                                 label() Level: 
                                 input(type='text',name='level',class='form-control')
                                 label() Source: 
@@ -51,7 +51,7 @@ block content
             div(class='col-md-12')
                 table
                     each m in messages
-                        tr
+                        tr(id='_r_'+m.entryid)
                             td #{m.ts}|#{m.level}| #{m.logname}| #{m.source}
                             td=m.message
                 

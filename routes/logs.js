@@ -40,7 +40,7 @@ router.get('/showlog/:id', function(req, res, next) {
     lr.search(query, st, lmt, 'entryid', 'asc', {}, function(s, r) {
         lr.close();
         //console.log('result', s, r);
-        res.render('showlog', {messages: r});
+        res.render('showlog', {messages: r, query: req.query});
     });
     
     
