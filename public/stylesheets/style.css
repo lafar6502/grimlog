@@ -10,3 +10,19 @@ a {
 .logtxt {
     font-family: 'Courier New'
 }
+
+#message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+}
+#inner-message {
+    margin: 0 auto;
+}
+#scrollllll {
+  height: 9001px;
+}
+

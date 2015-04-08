@@ -1,17 +1,58 @@
 extends layout
 
 block content
-  h1='Log view'
-  form
-    input(type='hidden', name='start')
-    input(type='hidden', name='limit')
-    input(type='hidden', name='sort')
-    input(type='hidden', name='dir')
-    input(type='hidden', name='level')
-
-  div(class='container-fluid logtxt')
-    each m in messages
-        div(class='row')
-            div(class='col-md-4') #{m.ts}|#{m.level}| #{m.logname}| #{m.source}
-            div(class='col-md-8')= m.message
-    
+    div(class='container-fluid')
+        nav(class='navbar navbar-default navbar-fixed-top')
+            form()
+                div(class='container-fluid')
+                    div(class='row')
+                        div(class='col-md-9 form-inline')
+                            input(type='hidden', name='start')
+                            input(type='hidden', name='limit')
+                            input(type='hidden', name='sort')
+                            input(type='hidden', name='dir')
+                            input(type='hidden', name='level')            
+                            div(class='form-group', style='display: inline-block')
+                                label() Log name: 
+                                input(type='text',name='logname',class='form-control')
+                                label() Level: 
+                                input(type='text',name='level',class='form-control')
+                                label() Source: 
+                                input(type='text',name='source',class='form-control')
+                            
+                        div(class='col-md-3')
+                            ul(class='pager')
+                                li(class='previous')
+                                    a(href='#')
+                                        span &larr;
+                                li(class='next')
+                                    a(href='#')
+                                        span &rarr;
+                        
+                
+                    
+        //
+            div(class='row', id='message', style='background-color: rgba(0, 0, 0, 0.80);')            
+                form(class='form-inline')
+                    input(type='hidden', name='start')
+                    input(type='hidden', name='limit')
+                    input(type='hidden', name='sort')
+                    input(type='hidden', name='dir')
+                    input(type='hidden', name='level')            
+                    div(class='form-group')
+                        label() Log name: 
+                        input(type='text',name='logname',class='form-control')
+                        label() Level: 
+                        input(type='text',name='level',class='form-control')
+                        label() Source: 
+                        input(type='text',name='source',class='form-control')
+                    
+        div(class='row logtxt')
+            div(class='col-md-12')
+                table
+                    each m in messages
+                        tr
+                            td #{m.ts}|#{m.level}| #{m.logname}| #{m.source}
+                            td=m.message
+                
+                 
