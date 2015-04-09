@@ -3,15 +3,15 @@ extends layout
 block content
     div(class='container-fluid')
         nav(class='navbar navbar-default navbar-fixed-top')
-            form()
+            form(id='searchForm')
                 div(class='container-fluid')
                     div(class='row')
                         div(class='col-md-9 form-inline')
-                            input(type='hidden', name='start', value=query.start)
-                            input(type='hidden', name='limit', value=query.limit)
-                            input(type='hidden', name='sort')
-                            input(type='hidden', name='dir')
-                            input(type='hidden', name='level')            
+                            input(type='hidden', name='start', id='start', value=(query.start == undefined ? 0 : query.start))
+                            input(type='hidden', name='limit', id='limit', value=(query.limit == undefined ? 0 : query.limit))
+                            input(type='hidden', name='hasMore')
+                            input(type='hidden', name='sort', value=query.sort)
+                            input(type='hidden', name='dir', value=query.dir)
                             div(class='form-group', style='display: inline-block')
                                 label() Log name: 
                                 input(type='text',name='logname',class='form-control',value=query.logname)
@@ -23,13 +23,32 @@ block content
                         div(class='col-md-3')
                             ul(class='pager')
                                 li(class='previous')
-                                    a(href='#')
+                                    a(href='#', id='prevPage')
                                         span &larr;
                                 li(class='next')
-                                    a(href='#')
+                                    a(href='#', id='nextPage')
                                         span &rarr;
                         
-                
+        script.
+            console.log('jquery is', jQuery);
+            jQuery('#nextPage').click(function() {
+                var f = $('#searchForm');
+                var s = $('#start');
+                var l = $('#limit');
+                s.val(parseInt(s.val()) + parseInt(l.val()));
+                console.log('new s is ', s.val());
+                f.submit();
+            });
+            jQuery('#prevPage').click(function() {
+                var f = $('#searchForm');
+                var s = $('#start');
+                var l = $('#limit');
+                var nv = parseInt(s.val()) - parseInt(l.val());
+                if (nv < 0) nv = 0;
+                s.val(nv);
+                f.submit();
+            });
+            
                     
         //
             div(class='row', id='message', style='background-color: rgba(0, 0, 0, 0.80);')            
@@ -46,7 +65,7 @@ block content
                         input(type='text',name='level',class='form-control')
                         label() Source: 
                         input(type='text',name='source',class='form-control')
-                    
+            
         div(class='row logtxt')
             div(class='col-md-12')
                 table
