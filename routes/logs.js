@@ -26,7 +26,6 @@ router.get('/showlog/:id', function(req, res, next) {
     var lr = glog.openLogSearcher({
         fileName: logdir + '/' + fid
     });
-    console.log('qry: ', req.query, 'db:', fid);
     
     var query = _.omit({
         level: req.query.level,
@@ -38,12 +37,15 @@ router.get('/showlog/:id', function(req, res, next) {
         startTime: req.query.startTime,
         endTime: req.query.endTime
     }, function(v) { return v == undefined || v == null || v == ''; });
+    
     req.query.limit = isNaN(req.query.limit) ? 100 : parseInt(req.query.limit);
     req.query.start = isNaN(req.query.start) ? 0 : parseInt(req.query.start);
     lr.search(query, req.query.start, req.query.limit, 'entryid', 'asc', {}, function(s, r) {
         lr.close();
         //console.log('result', s, r);
-        res.render('showlog', {messages: r, query: req.query});
+        console.log('more? ', r.hasMore, r.start, r.limit);
+        r.form = req.query;
+        res.render('showlog', r);
     });
     
     

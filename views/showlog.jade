@@ -6,70 +6,59 @@ block content
             form(id='searchForm')
                 div(class='container-fluid')
                     div(class='row')
-                        div(class='col-md-9 form-inline')
-                            input(type='hidden', name='start', id='start', value=(query.start == undefined ? 0 : query.start))
-                            input(type='hidden', name='limit', id='limit', value=(query.limit == undefined ? 0 : query.limit))
-                            input(type='hidden', name='hasMore')
-                            input(type='hidden', name='sort', value=query.sort)
-                            input(type='hidden', name='dir', value=query.dir)
+                        div(class='col-md-11 form-inline')
+                            input(type='hidden', name='start', id='start', value=(form.start == undefined ? 0 : form.start))
+                            input(type='hidden', name='limit', id='limit', value=(form.limit == undefined ? 0 : form.limit))
+                            input(type='hidden', name='hasMore', value=(hasMore ? 1 : 0))
+                            input(type='hidden', name='sort', value=form.sort)
+                            input(type='hidden', name='dir', value=form.dir)
                             div(class='form-group', style='display: inline-block')
                                 label() Log name: 
-                                input(type='text',name='logname',class='form-control',value=query.logname)
+                                input(type='text',name='logname',class='form-control',value=form.logname)
                                 label() Level: 
                                 input(type='text',name='level',class='form-control')
                                 label() Source: 
                                 input(type='text',name='source',class='form-control')
+                            button(type='button', class='btn btn-default navbar-btn', id='btn_search') Search
+                            button(type='button', class='btn navbar-btn', id='btn_clear') Clear
                             
-                        div(class='col-md-3')
+                        div(class='col-md-1')
                             ul(class='pager')
-                                li(class='previous')
+                                li(class=(start > 0 ? 'previous' : 'previous disabled'))
                                     a(href='#', id='prevPage')
                                         span &larr;
-                                li(class='next')
+                                li #{start} - #{start + data.length}
+                                li(class=(hasMore ? 'next' : 'next disabled'))
                                     a(href='#', id='nextPage')
                                         span &rarr;
-                        
+        if hasMore
+            script.
+                jQuery('#nextPage').click(function() {
+                    var f = $('#searchForm');
+                    var s = $('#start');
+                    s.val(!{start + limit});
+                    f.submit();
+                });
+        if start > 0
+            script.
+                jQuery('#prevPage').click(function() {
+                    var f = $('#searchForm');
+                    var s = $('#start');
+                    s.val(!{(start - limit < 0 ? 0 : start - limit)});
+                    f.submit();
+                });
         script.
-            console.log('jquery is', jQuery);
-            jQuery('#nextPage').click(function() {
-                var f = $('#searchForm');
-                var s = $('#start');
-                var l = $('#limit');
-                s.val(parseInt(s.val()) + parseInt(l.val()));
-                console.log('new s is ', s.val());
-                f.submit();
+            $('#btn_search').click(function() {
+                $('#searchForm').submit();
             });
-            jQuery('#prevPage').click(function() {
-                var f = $('#searchForm');
-                var s = $('#start');
-                var l = $('#limit');
-                var nv = parseInt(s.val()) - parseInt(l.val());
-                if (nv < 0) nv = 0;
-                s.val(nv);
-                f.submit();
+            $('#btn_clear').click(function() {
+                $('#searchForm').reset();
             });
-            
-                    
-        //
-            div(class='row', id='message', style='background-color: rgba(0, 0, 0, 0.80);')            
-                form(class='form-inline')
-                    input(type='hidden', name='start')
-                    input(type='hidden', name='limit')
-                    input(type='hidden', name='sort')
-                    input(type='hidden', name='dir')
-                    input(type='hidden', name='level')            
-                    div(class='form-group')
-                        label() Log name: 
-                        input(type='text',name='logname',class='form-control')
-                        label() Level: 
-                        input(type='text',name='level',class='form-control')
-                        label() Source: 
-                        input(type='text',name='source',class='form-control')
             
         div(class='row logtxt')
             div(class='col-md-12')
                 table
-                    each m in messages
+                    each m in data
                         tr(id='_r_'+m.entryid)
                             td #{m.ts}|#{m.level}| #{m.logname}| #{m.source}
                             td=m.message
