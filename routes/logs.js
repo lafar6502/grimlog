@@ -27,9 +27,12 @@ router.get('/showlog/:id', function(req, res, next) {
     var lr = glog.openLogSearcher({
         fileName: logdir + '/' + fid
     });
-    if (!isNaN(req.query.hh) && !isNaN(req.query.mm) && !isNaN(rq.query.ss)) {
+    var stime = null;
+    if (!isNaN(req.query.hh) && !isNaN(req.query.mm) && !isNaN(req.query.ss) && !isNaN(req.query.baseDate)) {
         //need a date, too!
+        stime = parseInt(req.query.baseDate) + (parseInt(req.query.hh) * 3600 + parseInt(req.query.mm) * 60 + parseInt(req.query.ss)) * 1000;
     };
+    console.log('stime: ', stime);
     var query = _.omit({
         level: req.query.level,
         logname: req.query.logname,
@@ -37,7 +40,7 @@ router.get('/showlog/:id', function(req, res, next) {
         correlation: req.query.correlation,
         pid: req.query.pid,
         threadid: req.query.threadid,
-        startTime: req.query.startTime,
+        startTime: isNaN(req.query.startTime) ? stime : req.query.startTime,
         endTime: req.query.endTime
     }, function(v) { return v == undefined || v == null || v == ''; });
     
@@ -48,8 +51,11 @@ router.get('/showlog/:id', function(req, res, next) {
         //console.log('result', s, r);
         console.log('more? ', r.hasMore, r.start, r.limit);
         r.form = req.query;
+        var t0 = r.data.length == 0 ? new Date() : new Date(r.data[0].ts);
+        if (!_.has(r.form, 'baseDate') || r.form.baseDate == null || r.form.baseDate == undefined || isNaN(r.form.baseDate)) {
+            r.form.baseDate = t0 - (t0 % (24 * 3600 * 1000));
+        };
         if (isNaN(r.form.hh) || isNaN(r.form.mm) || isNaN(r.form.ss)) {
-            var t0 = r.data.length == 0 ? new Date() : new Date(r.data[0].ts);
             r.form.hh = t0.getHours();
             r.form.mm = t0.getMinutes();
             r.form.ss = t0.getSeconds();

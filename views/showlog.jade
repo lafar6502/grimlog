@@ -6,7 +6,10 @@ block content
         nav(class='navbar navbar-default navbar-fixed-top')
             div(class='navbar-inner')
                 div.container
-                    form(class='navbar-form form-inline')
+                    form(class='navbar-form form-inline' id='searchForm')
+                        input(type='hidden' name='baseDate' id='baseDate' class='form-control' value=form.baseDate)
+                        input(type='hidden' name='start' id='start' class='form-control' value=form.start)
+                        input(type='hidden' name='limit' id='limit' class='form-control' value=form.limit)
                         input(type='number' name='hh' id='hh' class='form-control' min=0 max=23 value=form.hh)
                         span :
                         input(type='number' name='mm' id='mm' class='form-control' min=0 max=59 value=form.mm)
@@ -15,9 +18,9 @@ block content
                         span 
                             
                         div(class='btn-group')
-                            button(class='btn btn-default')
+                            button(class='btn btn-default' id='prevPage')
                                 span &larr;    
-                            button(class='btn btn-default')
+                            button(class='btn btn-default' id='nextPage')
                                 span &rarr;
                                 
                         select(id='level' name='level' style='margin-left: 5px;' class='form-control')
@@ -60,6 +63,7 @@ block content
                 });
         script.
             var srch = function() {
+                $('#start').val(0);
                 $('#searchForm').submit();
             };
             $('#hh').change(srch);
