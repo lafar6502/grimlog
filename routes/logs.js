@@ -4,6 +4,7 @@ var fs = require('fs');
 var glog = require('glog');
 var _ = require('lodash');
 var path = require('path');
+var moment = require('moment');
 
 var logdir = __dirname + '/../../glogs/';
 
@@ -26,7 +27,9 @@ router.get('/showlog/:id', function(req, res, next) {
     var lr = glog.openLogSearcher({
         fileName: logdir + '/' + fid
     });
-    
+    if (!isNaN(req.query.hh) && !isNaN(req.query.mm) && !isNaN(rq.query.ss)) {
+        //need a date, too!
+    };
     var query = _.omit({
         level: req.query.level,
         logname: req.query.logname,
@@ -45,6 +48,15 @@ router.get('/showlog/:id', function(req, res, next) {
         //console.log('result', s, r);
         console.log('more? ', r.hasMore, r.start, r.limit);
         r.form = req.query;
+        if (isNaN(r.form.hh) || isNaN(r.form.mm) || isNaN(r.form.ss)) {
+            var t0 = r.data.length == 0 ? new Date() : new Date(r.data[0].ts);
+            r.form.hh = t0.getHours();
+            r.form.mm = t0.getMinutes();
+            r.form.ss = t0.getSeconds();
+        }
+        _.forEach(r.data, function(e) {
+            e.tsf = moment(e.ts).format('HH:mm:ss.SSS');
+        });
         res.render('showlog', r);
     });
     

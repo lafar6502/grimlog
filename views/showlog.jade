@@ -1,36 +1,47 @@
 extends layout
 
+
 block content
     div(class='container-fluid')
         nav(class='navbar navbar-default navbar-fixed-top')
-            form(id='searchForm')
-                div(class='container-fluid')
-                    div(class='row')
-                        div(class='col-md-11 form-inline')
-                            input(type='hidden', name='start', id='start', value=(form.start == undefined ? 0 : form.start))
-                            input(type='hidden', name='limit', id='limit', value=(form.limit == undefined ? 0 : form.limit))
-                            input(type='hidden', name='hasMore', value=(hasMore ? 1 : 0))
-                            input(type='hidden', name='sort', value=form.sort)
-                            input(type='hidden', name='dir', value=form.dir)
-                            div(class='form-group', style='display: inline-block')
-                                label() Log name: 
-                                input(type='text',name='logname',class='form-control',value=form.logname)
-                                label() Level: 
-                                input(type='text',name='level',class='form-control')
-                                label() Source: 
-                                input(type='text',name='source',class='form-control')
-                            button(type='button', class='btn btn-default navbar-btn', id='btn_search') Search
-                            button(type='button', class='btn navbar-btn', id='btn_clear') Clear
+            div(class='navbar-inner')
+                div.container
+                    form(class='navbar-form form-inline')
+                        input(type='number' name='hh' id='hh' class='form-control' min=0 max=23 value=form.hh)
+                        span :
+                        input(type='number' name='mm' id='mm' class='form-control' min=0 max=59 value=form.mm)
+                        span :
+                        input(type='number' name='ss' id='ss' class='form-control' min=0 max=59 value=form.ss)
+                        span 
                             
-                        div(class='col-md-1')
-                            ul(class='pager')
-                                li(class=(start > 0 ? 'previous' : 'previous disabled'))
-                                    a(href='#', id='prevPage')
-                                        span &larr;
-                                li #{start} - #{start + data.length}
-                                li(class=(hasMore ? 'next' : 'next disabled'))
-                                    a(href='#', id='nextPage')
-                                        span &rarr;
+                        div(class='btn-group')
+                            button(class='btn btn-default')
+                                span &larr;    
+                            button(class='btn btn-default')
+                                span &rarr;
+                                
+                        select(id='level' name='level' style='margin-left: 5px;' class='form-control')
+                            option Trace
+                            option Debug
+                            option Info
+                            option Warn
+                            option Error
+                            
+                        input(type='text', name='logname' value=form.logname class='form-control', placeholder='log name')
+                        input(type='text', name='source' value=form.source class='form-control', placeholder='source')
+                        input(type='text', name='text' value=form.text class='form-control', placeholder='filter text')
+                        select(id='selectbasic2', style='margin-left: 5px;', class='span3')
+                            option=T
+                            option=X
+                        select(id='selectbasic3' style='margin-left: 5px;' class='input-small')
+                            option=T
+                            option=X
+                        
+                        button(type='submit', class='btn btn-success') Search
+                        a(href='#', class='adv-search')
+                            button(class="btn", type="button", style="margin-left:10px;")
+                                i(class="icon-th-list")
+                    
         if hasMore
             script.
                 jQuery('#nextPage').click(function() {
@@ -48,19 +59,23 @@ block content
                     f.submit();
                 });
         script.
-            $('#btn_search').click(function() {
+            var srch = function() {
                 $('#searchForm').submit();
-            });
+            };
+            $('#hh').change(srch);
+            $('#mm').change(srch);
+            $('#ss').change(srch);
+            $('#btn_search').click(srch);
             $('#btn_clear').click(function() {
                 $('#searchForm').reset();
             });
             
         div(class='row logtxt')
-            div(class='col-md-12')
-                table
+            div(class='col-md-12 table-responsive')
+                table(class='table table-striped table-condensed')
                     each m in data
                         tr(id='_r_'+m.entryid)
-                            td #{m.ts}|#{m.level}| #{m.logname}| #{m.source}
+                            td #{m.tsf}|#{m.level}| #{m.logname}| #{m.source}
                             td=m.message
                 
                  
