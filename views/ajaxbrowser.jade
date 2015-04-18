@@ -82,7 +82,7 @@ block content
            $('#prevPage').click(prevPage);
            
            $('#nextPage').click(nextPage);
-           
+           $('#btn_search').click(doSearch);
            doSearch();
         });
         
@@ -96,25 +96,34 @@ block content
                 button(type='button', class='btn btn-primary ' data-toggle='offcanvas')
                     i(class='glyphicon glyphicon-chevron-left')
             
-            
-        
-            button(class='btn btn-default navbar-btn' id='prevPage')
-                span &larr;
-            span(class='label label-default' id='curPosition')
-            button(class='btn btn-default navbar-btn' id='nextPage')
-                span &rarr;
-        
-                    
+            ul.pagination
+                li
+                    a(href='#' id='prevPage' aria-label='Prev')
+                        span(aria-hidden='true') &laquo;
+                li
+                    a(href='#') 
+                        span(aria-hidden='true' id='curPosition') 
+                li
+                    a(href='#' id='nextPage' aria-label='Next')
+                        span(aria-hidden='true') &raquo;
+             
                   
     div(class='row-offcanvas row-offcanvas-left')
         div(id='sidebar' class='sidebar-offcanvas')
             div(class='col-md-12')
+                span &nbsp;
                 form(id='searchForm' method='GET' action='/logs/query/' + fileId)
                     input(type='hidden' name='start' value=0)
                     input(type='hidden' name='limit' value=100)
                     div.form-group
-                        label(for='') Level
-                        input(type='text' class='form-control' id='level' name='level')
+                        label(for='level') Level
+                        select(id='level' name='level' class='form-control')
+                            option 
+                            option Trace
+                            option Debug
+                            option Info
+                            option Warn
+                            option Error
                     div.form-group
                         label(for='') Log name
                         input(type='text' class='form-control' id='logname' name='logname')
@@ -140,7 +149,7 @@ block content
                             div.col-md-3
                                 input(type='number' class='form-control timepick_field' name='ss' id='ss')
                     div.form-group
-                        button(class='btn' type='submit') Search
+                        button(class='btn' type='button' id='btn_search') Search
         div(id='main')
             div(class='col-md-12 logContent' id='logContent')
                 

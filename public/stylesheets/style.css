@@ -58,8 +58,14 @@ body {
     padding-right: 0px;
 }
 
+.pagination 
+{
+    margin: 5px 0px;
+};
+
+
 .btn_disabled {
-    border: solid 1px green;
+    color: #c0c0c0;
 };
 
 /*
