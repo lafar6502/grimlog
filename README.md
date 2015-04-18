@@ -29,5 +29,6 @@ that's necessary to collect and browse logs.
   * Performance metrics (e.g. forwarding some data to performance monitoring tool, time series database, rrdtool)
   * Alerts (nagios integration?)
   * User authentication - via some external auth mechanism
+  * Reading logs from text files, tailing text log files and parsing events from them
   
   
