@@ -63,7 +63,7 @@ router.get('/query/:id', function(req, res, next) {
         console.log('more? ', r.hasMore, r.start, r.limit);
         r.form = req.query;
         var t0 = r.data.length == 0 ? new Date() : new Date(r.data[0].ts);
-        r.firstTS = t0;
+        r.firstTS = t0.getTime();
         if (!_.has(r.form, 'baseDate') || r.form.baseDate == null || r.form.baseDate == undefined || isNaN(r.form.baseDate)) {
             r.form.baseDate = t0 - (t0 % (24 * 3600 * 1000));
         };
