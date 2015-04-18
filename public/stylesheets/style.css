@@ -57,6 +57,11 @@ body {
     padding-left: 2px;
     padding-right: 0px;
 }
+
+.btn_disabled {
+    border: solid 1px green;
+};
+
 /*
  * off Canvas sidebar
  * --------------------------------------------------

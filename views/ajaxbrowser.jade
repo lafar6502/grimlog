@@ -3,11 +3,89 @@ extends layout
 
 block content
     script.
+        var frm = null, fstart = null, flimit = null;
+        var g_hasMore = true;
+            
+        function onContentLoaded(hasMore, baseDate, rowCount, start) {
+            g_hasMore = hasMore;
+            console.log('has more:', g_hasMore, 'r:', rowCount, baseDate);
+            var cp = $('#curPosition');
+            cp.text('' + start  + ' - ' + (start + rowCount));
+            if (!hasMore) {
+                $('#nextPage').addClass('btn_disabled');
+            } else {
+                $('#nextPage').removeClass('btn_disabled');
+            };
+            if (parseInt(fstart.val()) <= 0) {
+                $('#prevPage').addClass('btn_disabled');
+            } else {
+                $('#prevPage').removeClass('btn_disabled');
+            };
+        };
+        
+        function doSearch() {
+            fstart.val(0);
+            frm.submit();
+        }
+        
+        function nextPage() {
+            if (g_hasMore == false) return;
+            console.log('more!', typeof(g_hasMore), g_hasMore);
+            fstart.val(parseInt(fstart.val()) + parseInt(flimit.val()));
+            console.log('start: ', fstart.val(), 'limit:', flimit.val());
+            frm.submit();
+        };
+        
+        function prevPage() {
+            var c = parseInt(fstart.val());
+            if (c <= 0) return;
+            c -= parseInt(flimit.val());
+            if (c < 0) c = 0;
+            fstart.val(c);
+            console.log('start: ', fstart.val(), 'limit:', flimit.val());
+            frm.submit();
+        };
+        
+        function zeroPage() {
+            fstart.val(0);
+        };    
+        
         $(document).ready(function() {
-          $('[data-toggle=offcanvas]').click(function() {
-            $('.row-offcanvas').toggleClass('active');
-          });
+            $('[data-toggle=offcanvas]').click(function() {
+                $('.row-offcanvas').toggleClass('active');
+            });
+            
+            frm = $('#searchForm');
+            fstart = frm.find('input[name=start]');
+            flimit = frm.find('input[name=limit]');
+        
+           
+           frm.submit(function(ev) {
+                console.log('form submit');
+                $.ajax({
+                    type: frm.attr('method'),
+                    url: frm.attr('action'),
+                    data: frm.serialize(),
+                    success: function (data) {
+                        var lc = $('#logContent');
+                        lc.html(data);
+                        var hasMore = lc.find('input[name=hasMore]').val() == "true";
+                        var baseDate = parseInt(lc.find('input[name=baseDate]').val());
+                        var count = parseInt(lc.find('input[name=count]').val());
+                        var start = parseInt(lc.find('input[name=start]').val());
+                        onContentLoaded(hasMore, baseDate, count, start);
+                    }
+                });
+                ev.preventDefault();
+           });
+           
+           $('#prevPage').click(prevPage);
+           
+           $('#nextPage').click(nextPage);
+           
+           doSearch();
         });
+        
     div(class='navbar navbar-inverse navbar-fixed-top')
         div(class='navbar-header')
             button(type='button', class='navbar-toggle', data-toggle='collapse', data-target='.navbar-collapse')
@@ -19,17 +97,21 @@ block content
                     i(class='glyphicon glyphicon-chevron-left')
             
             
-        div(class='collapse navbar-collapse')
-            ul(class='nav navbar-nav')
-                li(class='active')
-                    a(href='#') Home
-                li
-                    a(href='#') Some
+        
+            button(class='btn btn-default navbar-btn' id='prevPage')
+                span &larr;
+            span(class='label label-default' id='curPosition')
+            button(class='btn btn-default navbar-btn' id='nextPage')
+                span &rarr;
+        
                     
+                  
     div(class='row-offcanvas row-offcanvas-left')
         div(id='sidebar' class='sidebar-offcanvas')
             div(class='col-md-12')
-                form
+                form(id='searchForm' method='GET' action='/logs/query/' + fileId)
+                    input(type='hidden' name='start' value=0)
+                    input(type='hidden' name='limit' value=100)
                     div.form-group
                         label(for='') Level
                         input(type='text' class='form-control' id='level' name='level')
@@ -53,15 +135,14 @@ block content
                         div(class='form-group row time_field')
                             div.col-md-3
                                 input(type='number' class='form-control timepick_field' name='hh' id='hh')
-                            
                             div.col-md-3
                                 input(type='number' class='form-control timepick_field' name='mm' id='mm')
-                            
                             div.col-md-3
                                 input(type='number' class='form-control timepick_field' name='ss' id='ss')
-                        
+                    div.form-group
+                        button(class='btn' type='submit') Search
         div(id='main')
-            div(class='col-md-12')
+            div(class='col-md-12 logContent' id='logContent')
                 
                     
                         
