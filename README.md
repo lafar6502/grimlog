@@ -28,5 +28,6 @@ that's necessary to collect and browse logs.
   * Online event processing (configurable rules for handling incoming events and detecting some patterns/anomalies or deciding what to do with an event)
   * Performance metrics (e.g. forwarding some data to performance monitoring tool, time series database, rrdtool)
   * Alerts (nagios integration?)
+  * User authentication - via some external auth mechanism
   
   
