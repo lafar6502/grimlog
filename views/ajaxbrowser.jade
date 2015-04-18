@@ -1,0 +1,67 @@
+extends layout
+
+
+block content
+    script.
+        $(document).ready(function() {
+          $('[data-toggle=offcanvas]').click(function() {
+            $('.row-offcanvas').toggleClass('active');
+          });
+        });
+    div(class='navbar navbar-inverse navbar-fixed-top')
+        div(class='navbar-header')
+            button(type='button', class='navbar-toggle', data-toggle='collapse', data-target='.navbar-collapse')
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+            p.visible-xs
+                button(type='button', class='btn btn-primary ' data-toggle='offcanvas')
+                    i(class='glyphicon glyphicon-chevron-left')
+            
+            
+        div(class='collapse navbar-collapse')
+            ul(class='nav navbar-nav')
+                li(class='active')
+                    a(href='#') Home
+                li
+                    a(href='#') Some
+                    
+    div(class='row-offcanvas row-offcanvas-left')
+        div(id='sidebar' class='sidebar-offcanvas')
+            div(class='col-md-12')
+                form
+                    div.form-group
+                        label(for='') Level
+                        input(type='text' class='form-control' id='level' name='level')
+                    div.form-group
+                        label(for='') Log name
+                        input(type='text' class='form-control' id='logname' name='logname')
+                    div.form-group
+                        label(for='source') Source name
+                        input(type='text' class='form-control' id='source' name='source')
+                    div.form-group
+                        label(for='send_addr') Origin address
+                        input(type='text' class='form-control' id='send_addr' name='send_addr')
+                    div.form-group
+                        label(for='pid') PID 
+                        input(type='number' class='form-control' id='pid' name='pid')
+                    div.form-group
+                        label(for='threadid') PID 
+                        input(type='number' class='form-control' id='threadid' name='threadid')
+                    div.form-group
+                        label(for='') Start time
+                        div(class='form-group row time_field')
+                            div.col-md-3
+                                input(type='number' class='form-control timepick_field' name='hh' id='hh')
+                            
+                            div.col-md-3
+                                input(type='number' class='form-control timepick_field' name='mm' id='mm')
+                            
+                            div.col-md-3
+                                input(type='number' class='form-control timepick_field' name='ss' id='ss')
+                        
+        div(id='main')
+            div(class='col-md-12')
+                
+                    
+                        
