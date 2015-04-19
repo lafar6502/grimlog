@@ -14,6 +14,7 @@ that's necessary to collect and browse logs.
   * Log rotation. By default Glog-view rotates the log files on a daily basis and allows you to browse all collected files.
   * Performance: sqlite database is able to store 20-50 thousand records per second so this is the theoretical maximum of what Glog-viewer can handle.
     Database performance is the key limit here.
+
 # Status
 Currently in pre-alpha, some important parts need to be completed
 
