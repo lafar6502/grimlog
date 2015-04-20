@@ -9,12 +9,17 @@ block content
     input(type='hidden' name='limit' id='r_limit' value=limit)
     input(type='hidden' name='firstTS' id='r_firstTS' value=firstTS)
     
-    div(class='row logtxt')
+    div.row.logtxt
         div(class='col-md-12 table-responsive')
-            table(class='table table-striped table-condensed')
+            table(class='table table-striped table-condensed log_table')
                 each m in data
-                    tr(id='_r_'+m.entryid)
-                        td #{m.tsf}|#{m.level}| #{m.logname}| #{m.source}
+                    tr(id='_r_'+m.entryid, class='lvl_' + m.level.toLowerCase())
+                        td 
+                            | #{m.tsf}|#{m.level}|
+                            a P#{m.pid}|
+                            a T#{(m.threadid < 0 ? 0 : m.threadid)}| 
+                            a C#{m.correlation}|
+                            | #{m.logname}| #{m.source}
                         td=m.message
             
                  

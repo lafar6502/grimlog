@@ -29,6 +29,23 @@ block content
                 $('#mm').val(min);
                 $('#hh').val(hr);
             };
+            $('table.log_table tr td a').click(function(ev) {
+                var a = ev.target;
+                var m = a.text.match(/^T(\d+)/);
+                if (m != null && parseInt(m[1]) > 0) {
+                    var f = frm.find('input[name=threadid]');
+                    f.val(m[1]);
+                    doSearch();
+                    return;
+                };
+                m = a.text.match(/^P(\d+)/);
+                if (m != null && parseInt(m[1]) > 0) {
+                    var f = frm.find('input[name=pid]');
+                    f.val(m[1]);
+                    doSearch();
+                    return;
+                };
+            });
         };
         
         function doSearch() {
@@ -92,7 +109,7 @@ block content
            
            $('#nextPage').click(nextPage);
            $('#btn_search').click(doSearch);
-           doSearch();
+           frm.submit();//load initial data
         });
         
     div(class='navbar navbar-inverse navbar-fixed-top')
@@ -123,8 +140,13 @@ block content
             div(class='col-md-12')
                 span &nbsp;
                 form(id='searchForm' method='GET' action='/logs/query/' + fileId)
-                    input(type='hidden' name='start' value=0)
-                    input(type='hidden' name='limit' value=100)
+                    input(type='hidden' name='start' value=(isNaN(query.start) ? 0 : query.start))
+                    input(type='hidden' name='limit' value=(isNaN(query.limit) ? 100 : query.limit))
+                    div.form-group
+                        label(for='dir') Sort dir
+                        select(id='dir' name='dir' class='form-control')
+                            option(value='asc') Oldest first
+                            option(value='desc') Newest first
                     div.form-group
                         label(for='level') Level
                         select(id='level' name='level' class='form-control')
@@ -135,31 +157,39 @@ block content
                             option Warn
                             option Error
                     div.form-group
-                        label(for='') Log name
-                        input(type='text' class='form-control' id='logname' name='logname')
-                    div.form-group
                         label(for='source') Source name
-                        input(type='text' class='form-control' id='source' name='source')
+                        input(type='text' class='form-control' id='source' name='source' value=query.source)
                     div.form-group
                         label(for='send_addr') Origin address
-                        input(type='text' class='form-control' id='send_addr' name='send_addr')
+                        input(type='text' class='form-control' id='send_addr' name='send_addr' value=query.send_addr)
+                    div.form-group
+                        label(for='') Log name
+                        input(type='text' class='form-control' id='logname' name='logname' value=query.logname)
                     div.form-group
                         label(for='pid') PID 
-                        input(type='number' class='form-control' id='pid' name='pid')
+                        input(type='number' class='form-control' id='pid' name='pid' value=query.pid)
                     div.form-group
-                        label(for='threadid') PID 
-                        input(type='number' class='form-control' id='threadid' name='threadid')
+                        label(for='threadid') Thread ID 
+                        input(type='number' class='form-control' id='threadid' name='threadid' value=query.threadid)
                     div.form-group
                         label(for='') Start time
                         div(class='form-group row time_field')
                             div.col-md-3
-                                input(type='number' class='form-control timepick_field' name='hh' id='hh')
+                                input(type='number' class='form-control timepick_field' name='hh' id='hh' value=query.hh)
                             div.col-md-3
-                                input(type='number' class='form-control timepick_field' name='mm' id='mm')
+                                input(type='number' class='form-control timepick_field' name='mm' id='mm' value=query.mm)
                             div.col-md-3
-                                input(type='number' class='form-control timepick_field' name='ss' id='ss')
+                                input(type='number' class='form-control timepick_field' name='ss' id='ss' value=query.ss)
                     div.form-group
-                        button(class='btn' type='button' id='btn_search') Search
+                        label(for='text') Correlation id
+                        input(type='text' class='form-control' id='correlation' name='correlation' value=query.correlation)
+                    div.form-group
+                        label(for='text') Message text
+                        input(type='text' class='form-control' id='text' name='text' value=query.text)
+                    div.form-group
+                        button(class='btn btn-primary' type='button' id='btn_search') Search
+                        span &nbsp;
+                        button(class='btn' type='button' id='btn_reset') Reset
         div(id='main')
             div(class='col-md-12 logContent' id='logContent')
                 

@@ -8,6 +8,9 @@ var moment = require('moment');
 
 var logdir = __dirname + '/../../glogs/';
 
+function getLogFileIds() {
+};
+
 /* GET logs listing. */
 router.get('/', function(req, res, next) {
     fs.readdir(logdir, function(err, files) {
@@ -51,7 +54,7 @@ router.get('/query/:id', function(req, res, next) {
     
     req.query.limit = isNaN(req.query.limit) ? 100 : parseInt(req.query.limit);
     req.query.start = isNaN(req.query.start) ? 0 : parseInt(req.query.start);
-    lr.search(query, req.query.start, req.query.limit, 'entryid', 'asc', {}, function(s, r) {
+    lr.search(query, req.query.start, req.query.limit, 'entryid', req.query.dir, {}, function(s, r) {
         lr.close();
         //console.log('result', s, r);
         if (!s) {
@@ -83,7 +86,7 @@ router.get('/query/:id', function(req, res, next) {
 router.get('/browser/:id', function(req, res, next) {
     
     var r = {
-        form: req.query,
+        query: req.query,
         fileId: req.params.id,
         prevFileId: '',
         nextFileId: ''

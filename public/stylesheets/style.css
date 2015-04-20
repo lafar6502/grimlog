@@ -7,7 +7,7 @@ a {
 }
 
 .logtxt {
-    font-family: 'Courier New'
+    font-family: 'Lucida Console'
 }
 
 #message {
@@ -61,12 +61,24 @@ body {
 .pagination 
 {
     margin: 5px 0px;
-};
+}
 
 
 .btn_disabled {
     color: #c0c0c0;
-};
+}
+
+tr.lvl_error {
+    color: red;
+}
+
+tr.lvl_warn {
+    color: #B26B00;
+}
+
+tr.lvl_info {
+    color: #008000;
+}
 
 /*
  * off Canvas sidebar
