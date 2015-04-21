@@ -5,5 +5,7 @@
     "udpPort": 10030,
     "listenAddress": "0.0.0.0",
     "gelfPort": 12201,
-    "gelfAddress": "0.0.0.0"
+    "gelfAddress": "0.0.0.0",
+    "httpPort" : 3000,
+    "httpAddress": "0.0.0.0"
 }
