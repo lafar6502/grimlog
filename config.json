@@ -1,0 +1,9 @@
+{
+    "description": "grimlog config file",
+    "fileName": "../glogs/grimlog_",
+    "fileDateFormat": "YYYY-MM-DD",
+    "udpPort": 10030,
+    "listenAddress": "0.0.0.0",
+    "gelfPort": 12201,
+    "gelfAddress": "0.0.0.0"
+}

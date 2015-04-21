@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('glogv:server');
 var http = require('http');
+var config = require('../config.json');
+var coll = require('../collectors');
 
 /**
  * Get port from environment and store in Express.
@@ -88,3 +90,6 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+var logcollector = coll.configureEventCollectors(config);
+
