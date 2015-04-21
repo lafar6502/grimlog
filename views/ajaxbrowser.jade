@@ -25,9 +25,9 @@ block content
                 var sec = (firstTS % 60000) / 1000;
                 var min = (firstTS % 60 * 60000) / 60000;
                 var hr = (firstTS % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
-                $('#ss').val(sec);
-                $('#mm').val(min);
-                $('#hh').val(hr);
+                $('#ss').val(Math.floor(sec));
+                $('#mm').val(Math.floor(min));
+                $('#hh').val(Math.floor(hr));
             };
             $('table.log_table tr td a').click(function(ev) {
                 var a = ev.target;

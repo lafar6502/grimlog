@@ -49,7 +49,8 @@ router.get('/query/:id', function(req, res, next) {
         threadid: req.query.threadid,
         startTime: isNaN(req.query.startTime) ? stime : req.query.startTime,
         endTime: req.query.endTime,
-        entryid: req.query.entryid
+        entryid: req.query.entryid,
+        text: req.query.text
     }, function(v) { return v == undefined || v == null || v == ''; });
     
     req.query.limit = isNaN(req.query.limit) ? 100 : parseInt(req.query.limit);
