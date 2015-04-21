@@ -6,17 +6,17 @@ can be browsed and searched via web gui which is also provided by the applicatio
 that's necessary to collect and browse logs.
 
 # Features
-  * Log messages are sent to Glog-view over UDP, every message is a JSON object. More transport/format options are planned for future.
-  * Many popular logging frameworks can be configured to send logs over UDP so no additional libraries are necessary on the application side.
+  * Log messages are sent to Glog-view over UDP, every message is a JSON object. Proprietary JSON and GELF format are supported. More transport options/formats to come (hopefully).
+  * Many popular logging frameworks can be configured to send logs over UDP/GELF so no additional libraries are necessary on the application side.
   * Single process. Glog-view runs as a single nodejs application and doesn't have any dependencies on other running services. 
-  * Low footprint - single nodejs application, consumes 20-40 MB of RAM, compact log file format, efficient and lightweight implementation.  
+  * Low footprint - single nodejs application, consumes 30-130 MB of RAM, compact log file format, efficient and lightweight implementation.  
   * Simple configuration, or no configuration at all. Just install and run, the same procedure on Linux, Windows or Mac OS. 
   * Log rotation. By default Glog-view rotates the log files on a daily basis and allows you to browse all collected files.
   * Performance: sqlite database is able to store 20-50 thousand records per second so this is the theoretical maximum of what Glog-viewer can handle.
     Database performance is the key limit here.
 
 # Status
-Currently in pre-alpha, some important parts need to be completed
+Currently in alpha, some important parts need to be completed
 
 # TODO List - ideas, plans    
   * Full-text search (currently only normal sql queries are used) 
@@ -33,5 +33,7 @@ Currently in pre-alpha, some important parts need to be completed
   * Alerts (nagios integration?)
   * User authentication - via some external auth mechanism
   * Reading logs from text files, tailing text log files and parsing events from them
+  * Health check (basic website with some stats/grimlog health information)
+ 
   
   
