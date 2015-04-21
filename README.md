@@ -6,7 +6,7 @@ can be browsed and searched via web gui which is also provided by the applicatio
 that's necessary to collect and browse logs.
 
 # Features
-  * Log messages are sent to Glog-view over UDP, every message is a JSON object. Proprietary JSON and GELF format are supported. More transport options/formats to come (hopefully).
+  * Log messages are sent to Glog-view over UDP, every message is a JSON object. Simple JSON and GELF format are supported. More transport options/formats to come (hopefully).
   * Many popular logging frameworks can be configured to send logs over UDP/GELF so no additional libraries are necessary on the application side.
   * Single process. Glog-view runs as a single nodejs application and doesn't have any dependencies on other running services. 
   * Low footprint - single nodejs application, consumes 30-130 MB of RAM, compact log file format, efficient and lightweight implementation.  
@@ -17,6 +17,17 @@ that's necessary to collect and browse logs.
 
 # Status
 Currently in alpha, some important parts need to be completed
+
+# Message fields
+List of fields that are handled/understood by grimlog 
+* message - message text (short_message and full_message in GELF) - mandatory
+* level - log level (syslog severity, same as in GELF) - optional
+* ts - timestamp (num of milliseconds since epoch) - optional 
+* source - log source (application name for example) - optional
+* logname - log name (_logname custom field in GELF message) - optional
+* pid - process ID (_pid in GELF) - optional
+* threadid - thread ID (_threadid in GELF) - optional
+* correlation - correlation id that joins group of messages (_correlatio in GELF) - optional
 
 # TODO List - ideas, plans    
   * Full-text search (currently only normal sql queries are used) 
