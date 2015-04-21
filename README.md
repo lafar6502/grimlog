@@ -27,7 +27,7 @@ List of fields that are handled/understood by grimlog
 * logname - log name (_logname custom field in GELF message) - optional
 * pid - process ID (_pid in GELF) - optional
 * threadid - thread ID (_threadid in GELF) - optional
-* correlation - correlation id that joins group of messages (_correlatio in GELF) - optional
+* correlation - correlation id that joins group of messages (_correlation in GELF) - optional
 
 # TODO List - ideas, plans    
   * Full-text search (currently only normal sql queries are used) 
