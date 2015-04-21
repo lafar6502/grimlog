@@ -1,4 +1,4 @@
-# glog-view
+# grimlog
 Simple, lightweight log aggregator and web viewer
 
 Glog-view is a simple log aggregator that collects application logs over the network and saves them in sqlite database. Collected logs 
