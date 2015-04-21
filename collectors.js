@@ -7,6 +7,7 @@ function EventCollectors(cfg) {
     var lc = glog.createLogCollector(cfg);
     
     this.start = function() {
+        lc.start();
     };
     
     this.getLogCollector = function() {
