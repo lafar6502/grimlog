@@ -14,12 +14,13 @@ function getLogFileIds() {
 /* GET logs listing. */
 router.get('/', function(req, res, next) {
     fs.readdir(logdir, function(err, files) {
-        console.log(err, files);
+        var fl = _.map(files, function(f) {return path.basename(f, '.db3');}).sort();
+        //console.log(err, files);
         if (err) {
             res.error();
         }
         else {
-            res.render('loglist', { files: _.map(files, function(f) {return path.basename(f, '.db3');}) });
+            res.render('loglist', { files:  fl});
         };
     });
 });

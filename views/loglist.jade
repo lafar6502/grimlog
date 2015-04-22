@@ -1,10 +1,18 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  ul
-    each f in files
-        li
-            a(href='./browser/' + f)=f
+  div(class='navbar navbar-inverse navbar-fixed-top')
+    a.navbar-brand(href='#')
+        img(alt='Brand' src='img.jpg')
     
+    button.btn.btn-default.navbar-btn(type='button') Health
+    button.btn.btn-default.navbar-btn(type='button') B2
+    
+  div.container-fluid
+      h1= title
+      p Welcome to #{title}
+      ul
+        each f in files
+            li
+                a(href='./browser/' + f)=f
+        

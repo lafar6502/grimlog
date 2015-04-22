@@ -111,30 +111,34 @@ block content
            $('#btn_search').click(doSearch);
            frm.submit();//load initial data
         });
+    nav.navbar.navbar-default.navbar-inverse.navbar-fixed-top
+        div.container-fluid
+            div.navbar-header
+                a.navbar-brand(href='#')
+                    img(alt='Brand' src='...')
+            ul.nav.navbar-nav
+                li
+                    a(href='#' id='prevPage' aria-label='Prev')
+                        span(aria-hidden='true') &laquo;
+                li
+                    a(href='#') 
+                        span(aria-hidden='true' id='curPosition') 
+                li
+                    a(href='#' id='nextPage' aria-label='Next')
+                        span(aria-hidden='true') &raquo;
+                        
+            ul.nav.navbar-nav.navbar-right
+                li
+                    a(href='#' id='' aria-label='Prev')
+                        span(aria-hidden='true') &laquo;
+                li
+                    a(href='#') 
+                        span(aria-hidden='true' id='')=fileId 
+                li
+                    a(href='#' id='' aria-label='Next')
+                        span(aria-hidden='true') &raquo;
+             
         
-    div(class='navbar navbar-inverse navbar-fixed-top')
-        div(class='navbar-header')
-            button(type='button', class='navbar-toggle', data-toggle='collapse', data-target='.navbar-collapse')
-                span.icon-bar
-                span.icon-bar
-                span.icon-bar
-            div.navbar-left
-                p.visible-xs
-                    button(type='button', class='btn btn-primary ' data-toggle='offcanvas')
-                        i(class='glyphicon glyphicon-chevron-left')
-                
-                ul.pagination
-                    li
-                        a(href='#' id='prevPage' aria-label='Prev')
-                            span(aria-hidden='true') &laquo;
-                    li
-                        a(href='#') 
-                            span(aria-hidden='true' id='curPosition') 
-                    li
-                        a(href='#' id='nextPage' aria-label='Next')
-                            span(aria-hidden='true') &raquo;
-                 
-                  
     div(class='row-offcanvas row-offcanvas-left')
         div(id='sidebar' class='sidebar-offcanvas')
             div(class='col-md-12')
