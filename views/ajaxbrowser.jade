@@ -109,12 +109,27 @@ block content
            
            $('#nextPage').click(nextPage);
            $('#btn_search').click(doSearch);
+           $('#dir').change(doSearch);
+           $(document).keydown(function(e) {
+                console.log(e.which);
+                switch(e.which) {
+                    case 37: // left
+                        prevPage();
+                    break;
+                    case 39: // right
+                        nextPage();
+                    break;
+                    default: return; 
+                }
+                e.preventDefault(); 
+            });
+            
            frm.submit();//load initial data
         });
     nav.navbar.navbar-default.navbar-inverse.navbar-fixed-top
         div.container-fluid
             div.navbar-header
-                a.navbar-brand(href='#')
+                a.navbar-brand(href='/logs/')
                     img(alt='Brand' src='...')
             ul.nav.navbar-nav
                 li
@@ -149,8 +164,10 @@ block content
                     div.form-group
                         label(for='dir') Sort dir
                         select(id='dir' name='dir' class='form-control')
-                            option(value='asc') Oldest first
                             option(value='desc') Newest first
+                            option(value='asc') Oldest first
+                            
+                            
                     div.form-group
                         label(for='level') Level
                         select(id='level' name='level' class='form-control')
@@ -193,7 +210,7 @@ block content
                     div.form-group
                         button(class='btn btn-primary' type='button' id='btn_search') Search
                         span &nbsp;
-                        button(class='btn' type='button' id='btn_reset') Reset
+                        input(class='btn' type='reset' id='' value='Reset') 
         div(id='main')
             div(class='col-md-12 logContent' id='logContent')
                 
