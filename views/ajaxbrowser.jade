@@ -144,13 +144,13 @@ block content
                         
             ul.nav.navbar-nav.navbar-right
                 li
-                    a(href='#' id='' aria-label='Prev')
+                    a(href='/logs/prevFile/' + fileId, id='' aria-label='Prev file')
                         span(aria-hidden='true') &laquo;
                 li
                     a(href='#') 
                         span(aria-hidden='true' id='')=fileId 
                 li
-                    a(href='#' id='' aria-label='Next')
+                    a(href='/logs/nextFile/' + fileId, id='' aria-label='Next file')
                         span(aria-hidden='true') &raquo;
              
         

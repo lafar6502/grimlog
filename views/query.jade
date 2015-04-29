@@ -19,7 +19,7 @@ block content
                             a P#{m.pid}|
                             a T#{(m.threadid < 0 ? 0 : m.threadid)}| 
                             a C#{m.correlation}|
-                            | #{m.logname}| #{m.source}
+                            | #{m.logname}| #{m.source}| #{m.uid}
                         td=m.message
             
                  

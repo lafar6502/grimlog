@@ -8,21 +8,54 @@ var moment = require('moment');
 
 var logdir = __dirname + '/../../glogs/';
 
-function getLogFileIds() {
+function getLogFileIds(callback) {
+    fs.readdir(logdir, function(err, files) {
+        if (err) { 
+            callback(false, files);
+            return;
+        };
+        var fl = _.map(files, function(f) {return path.basename(f, '.db3');}).sort();
+        callback(true, fl);
+    });
 };
 
 /* GET logs listing. */
 router.get('/', function(req, res, next) {
-    fs.readdir(logdir, function(err, files) {
-        var fl = _.map(files, function(f) {return path.basename(f, '.db3');}).sort();
-        //console.log(err, files);
-        if (err) {
+    getLogFileIds(function(s, fl) {
+        if (!s) {
             res.error();
-        }
-        else {
+            return;
+        } else {
             res.render('loglist', { files:  fl});
-        };
+        }
     });
+});
+
+
+function switchFile(id, moveNext, req, res, next) {
+    
+    getLogFileIds(function(s, fl) {
+        if (!s) {
+            res.error();
+            return;
+        } else {
+            var idx = fl.indexOf(id);
+            var did = id;
+            if (idx >= 0) {
+                if (moveNext && idx < fl.length - 1) did = fl[idx + 1];
+                if (!moveNext && idx > 0) did = fl[idx - 1];
+            }
+            res.redirect('/logs/browser/' + did);
+        }
+    });
+};
+
+router.get('/nextFile/:id', function(req, res, next) {
+    switchFile(req.params.id, true, req, res, next);
+});
+
+router.get('/prevFile/:id', function(req, res, next) {
+    switchFile(req.params.id, false, req, res, next);
 });
 
 router.get('/query/:id', function(req, res, next) {
@@ -48,6 +81,7 @@ router.get('/query/:id', function(req, res, next) {
         correlation: req.query.correlation,
         pid: req.query.pid,
         threadid: req.query.threadid,
+        uid: req.query.uid,
         startTime: isNaN(req.query.startTime) ? stime : req.query.startTime,
         endTime: req.query.endTime,
         entryid: req.query.entryid,
