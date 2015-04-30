@@ -7,11 +7,18 @@ block content
         var g_hasMore = true;
         var g_firstTS = 0;
         var dontTouchHH = false;
+        var timeModified = false;
         
         function twod(n) {
             if (isNaN(n)) return n;
             var s = n.toString();
             return s.length == 1 ? "0" + s : s;
+        };
+        
+        function isNum(n) {
+            if (n == undefined || n == null || n == '') return false;
+            if (isNaN(n)) return false;
+            return true;
         };
         
         function onContentLoaded(hasMore, baseDate, rowCount, start, firstTS) {
@@ -33,13 +40,14 @@ block content
                 $('#prevPage').removeClass('btn_disabled');
             };
             
-            if (!isNaN(firstTS) && !dontTouchHH) {
+            if (isNum(firstTS) && !dontTouchHH) {
                 var dt = new Date(firstTS);
                 $('#ss').val(twod(dt.getSeconds()));
                 $('#mm').val(twod(dt.getMinutes()));
                 $('#hh').val(twod(dt.getHours()));
             };
             dontTouchHH = false;
+            timeModified = false;
             
             $('table.log_table tr td a').click(function(ev) {
                 var a = ev.target;
@@ -62,6 +70,11 @@ block content
         
         function doSearch() {
             fstart.val(0);
+            if (!timeModified) {
+                $('#hh').val('');
+                $('#mm').val('');
+                $('#ss').val('');
+            };
             frm.submit();
         }
         
@@ -92,6 +105,7 @@ block content
             //if (isNaN(bd) || bd <= 0) return;
             var dt = new Date(bd);
             dontTouchHH = true;
+            timeModified = true;
             doSearch();
         };
         

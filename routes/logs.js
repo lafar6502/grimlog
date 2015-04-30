@@ -43,6 +43,13 @@ function getLogFileIds(withFileInfo, callback) {
     });
 };
 
+function isNum(n) {
+    if (n == undefined || n == null || n == '') return false;
+    if (isNaN(n)) return false;
+    return true;
+};
+
+
 /* GET logs listing. */
 router.get('/', function(req, res, next) {
     getLogFileIds(true, function(s, fl) {
@@ -91,7 +98,7 @@ router.get('/query/:id', function(req, res, next) {
     });
     console.log('qry: ', req.query);
     var stime = null;
-    if (!isNaN(req.query.hh) && !isNaN(req.query.mm) && !isNaN(req.query.ss) && !isNaN(req.query.baseDate)) {
+    if (isNum(req.query.hh) && isNum(req.query.mm) && isNum(req.query.ss) && isNum(req.query.baseDate)) {
         //need a date, too!
         var dt = new Date(parseInt(req.query.baseDate));
         console.log('based: ', dt);
