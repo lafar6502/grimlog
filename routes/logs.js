@@ -8,20 +8,44 @@ var moment = require('moment');
 
 var logdir = __dirname + '/../../glogs/';
 
-function getLogFileIds(callback) {
+function getLogFileIds(withFileInfo, callback) {
     fs.readdir(logdir, function(err, files) {
         if (err) { 
             callback(false, files);
             return;
         };
         var fl = _.map(files, function(f) {return path.basename(f, '.db3');}).sort();
-        callback(true, fl);
+        if (withFileInfo) {
+            var cnt = files.length;
+            var rt = [];
+            _.forEach(files, function(f) {
+                fs.stat(f, function(err, st) {
+                    cnt--;
+                    if (!err) {
+                        console.log(st);
+                        rt.push({
+                            fileName: path.basename(f, '.db3'),
+                            size: st.size,
+                            lastModified: st.mtime
+                        });
+                        
+                    };
+                    if (cnt == 0) {
+                        console.log('files:', rt);
+                    };
+                });
+            });
+            callback(true, fl);
+        }
+        else {
+            callback(true, fl);
+        };
     });
 };
 
 /* GET logs listing. */
 router.get('/', function(req, res, next) {
-    getLogFileIds(function(s, fl) {
+    getLogFileIds(true, function(s, fl) {
         if (!s) {
             res.error();
             return;
@@ -34,7 +58,7 @@ router.get('/', function(req, res, next) {
 
 function switchFile(id, moveNext, req, res, next) {
     
-    getLogFileIds(function(s, fl) {
+    getLogFileIds(false, function(s, fl) {
         if (!s) {
             res.error();
             return;
@@ -65,15 +89,22 @@ router.get('/query/:id', function(req, res, next) {
         fileName: logdir + '/' + fid,
         readOnly: true
     });
-    
+    console.log('qry: ', req.query);
     var stime = null;
     if (!isNaN(req.query.hh) && !isNaN(req.query.mm) && !isNaN(req.query.ss) && !isNaN(req.query.baseDate)) {
         //need a date, too!
-        stime = parseInt(req.query.baseDate) + (parseInt(req.query.hh) * 3600 + parseInt(req.query.mm) * 60 + parseInt(req.query.ss)) * 1000;
+        var dt = new Date(parseInt(req.query.baseDate));
+        console.log('based: ', dt);
+        dt.setHours(parseInt(req.query.hh));
+        dt.setMinutes(parseInt(req.query.mm));
+        dt.setSeconds(parseInt(req.query.ss));
+        console.log('based2: ', dt);
+        
+        stime = dt.getTime(); //parseInt(req.query.baseDate) + (parseInt(req.query.hh) * 3600 + parseInt(req.query.mm) * 60 + parseInt(req.query.ss)) * 1000;
     };
     
-    console.log('stime: ', stime);
-    var query = _.omit({
+    console.log('stime: ', stime, 'q.st', isNaN(req.query.startTime), ' - ', req.query.startTime);
+    var dquery = {
         level: req.query.level,
         logname: req.query.logname,
         source: req.query.source,
@@ -82,15 +113,16 @@ router.get('/query/:id', function(req, res, next) {
         pid: req.query.pid,
         threadid: req.query.threadid,
         uid: req.query.uid,
-        startTime: isNaN(req.query.startTime) ? stime : req.query.startTime,
+        startTime: isNaN(stime) ? undefined : stime,
         endTime: req.query.endTime,
         entryid: req.query.entryid,
         text: req.query.text
-    }, function(v) { return v == undefined || v == null || v == ''; });
-    
+    };
+    dquery = _.omit(dquery, function(v) { return v == undefined || v == null || v == ''; });
     req.query.limit = isNaN(req.query.limit) ? 100 : parseInt(req.query.limit);
     req.query.start = isNaN(req.query.start) ? 0 : parseInt(req.query.start);
-    lr.search(query, req.query.start, req.query.limit, 'entryid', req.query.dir, {}, function(s, r) {
+    console.log('db qry = ', dquery);
+    lr.search(dquery, req.query.start, req.query.limit, 'entryid', req.query.dir, {}, function(s, r) {
         lr.close();
         //console.log('result', s, r);
         if (!s) {
@@ -104,8 +136,9 @@ router.get('/query/:id', function(req, res, next) {
         var t0 = r.data.length == 0 ? new Date() : new Date(r.data[0].ts);
         r.firstTS = t0.getTime();
         if (!_.has(r.form, 'baseDate') || r.form.baseDate == null || r.form.baseDate == undefined || isNaN(r.form.baseDate)) {
-            r.form.baseDate = t0 - (t0 % (24 * 3600 * 1000));
+            
         };
+        r.form.baseDate = t0 - (t0 % (24 * 3600 * 1000));
         if (isNaN(r.form.hh) || isNaN(r.form.mm) || isNaN(r.form.ss)) {
             r.form.hh = t0.getHours();
             r.form.mm = t0.getMinutes();

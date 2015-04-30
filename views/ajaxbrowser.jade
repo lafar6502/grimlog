@@ -5,12 +5,23 @@ block content
     script.
         var frm = null, fstart = null, flimit = null;
         var g_hasMore = true;
-            
+        var g_firstTS = 0;
+        var dontTouchHH = false;
+        
+        function twod(n) {
+            if (isNaN(n)) return n;
+            var s = n.toString();
+            return s.length == 1 ? "0" + s : s;
+        };
+        
         function onContentLoaded(hasMore, baseDate, rowCount, start, firstTS) {
             g_hasMore = hasMore;
-            console.log('has more:', g_hasMore, 'r:', rowCount, baseDate);
+            g_firstTS = firstTS;
+            console.log('has more:', g_hasMore, 'r:', rowCount, 'bdate:', baseDate);
+            $('#baseDate').val(baseDate);
             var cp = $('#curPosition');
             cp.text('' + start  + ' - ' + (start + rowCount));
+            
             if (!hasMore) {
                 $('#nextPage').addClass('btn_disabled');
             } else {
@@ -21,14 +32,15 @@ block content
             } else {
                 $('#prevPage').removeClass('btn_disabled');
             };
-            if (!isNaN(firstTS)) {
-                var sec = (firstTS % 60000) / 1000;
-                var min = (firstTS % 60 * 60000) / 60000;
-                var hr = (firstTS % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
-                $('#ss').val(Math.floor(sec));
-                $('#mm').val(Math.floor(min));
-                $('#hh').val(Math.floor(hr));
+            
+            if (!isNaN(firstTS) && !dontTouchHH) {
+                var dt = new Date(firstTS);
+                $('#ss').val(twod(dt.getSeconds()));
+                $('#mm').val(twod(dt.getMinutes()));
+                $('#hh').val(twod(dt.getHours()));
             };
+            dontTouchHH = false;
+            
             $('table.log_table tr td a').click(function(ev) {
                 var a = ev.target;
                 var m = a.text.match(/^T(\d+)/);
@@ -75,6 +87,14 @@ block content
             fstart.val(0);
         };    
         
+        function startTimeChange() {
+            var bd = $('#baseDate').val();
+            //if (isNaN(bd) || bd <= 0) return;
+            var dt = new Date(bd);
+            dontTouchHH = true;
+            doSearch();
+        };
+        
         $(document).ready(function() {
             $('[data-toggle=offcanvas]').click(function() {
                 $('.row-offcanvas').toggleClass('active');
@@ -109,6 +129,9 @@ block content
            
            $('#nextPage').click(nextPage);
            $('#btn_search').click(doSearch);
+           $('#hh').change(startTimeChange);
+           $('#mm').change(startTimeChange);
+           $('#ss').change(startTimeChange);
            $('#dir').change(doSearch);
            $(document).keydown(function(e) {
                 console.log(e.which);
@@ -161,6 +184,8 @@ block content
                 form(id='searchForm' method='GET' action='/logs/query/' + fileId)
                     input(type='hidden' name='start' value=(isNaN(query.start) ? 0 : query.start))
                     input(type='hidden' name='limit' value=(isNaN(query.limit) ? 100 : query.limit))
+                    input(type='hidden' id='baseDate' name='baseDate')
+                    input(type='hidden' name='startTime' value=(isNaN(query.startTime) ? "" : query.startTime))
                     div.form-group
                         label(for='dir') Sort dir
                         select(id='dir' name='dir' class='form-control')
