@@ -37,7 +37,7 @@ eventHub.on('glogEvent', function(m) {
 
 var gelfsrv = null;
 if (_.isNumber(cfg.gelfPort)) {
-    console.log('configuring gelf receiver', cfg.gelfAddress, cfg.gelfPort);
+    console.log('configuring GELF receiver', cfg.gelfAddress, cfg.gelfPort);
     gelfsrv = gelfserver();
     gelfsrv.on('message', function(msg) {
         if (!_.has(msg, 'level')) msg.level = 'INFO';
@@ -60,6 +60,10 @@ if (_.isNumber(cfg.gelfPort)) {
         if (isNaN(ev.ts)) ev.ts = new Date().getTime();
         if (!_.isString(ev.message)) return;
         eventHub.emit('glogEvent', ev);
+    });
+    gelfsrv.on('error', function(er) {
+        console.log('gelf message error', er);
+        eventHub.emit('messageError', null, er);
     });
     gelfsrv.listen(cfg.gelfPort, cfg.gelfAddress);
     console.log('GELF listening on', gelfsrv.address, gelfsrv.port);
@@ -84,6 +88,7 @@ if (_.isNumber(cfg.udpPort)) {
         }
         catch(e) {
             console.log('failed to parse message', msg, e);
+            eventHub.emit('messageError', msg, e);
         }
     });
     dgsock = s;
