@@ -1,19 +1,19 @@
 # grimlog
 Simple, lightweight log aggregator and web viewer
 
-Glog-view is a simple log aggregator that collects application logs over the network and saves them in sqlite database. Collected logs 
+Grimlog is a simple log aggregator that collects application logs over the network and saves them in sqlite database. Collected logs 
 can be browsed and searched via web gui which is also provided by the application. The tool is implemented using nodejs and has everything
 that's necessary to collect and browse logs.
 
 # Features
-  * Log messages are sent to Glog-view over UDP, every message is a JSON object. Simple JSON and GELF format are supported. More transport options/formats to come (hopefully).
+  * Log messages are sent to grimlog over UDP, every message is a JSON object. Simple JSON and GELF format are supported. More transport options/formats to come (hopefully).
   * Many popular logging frameworks can be configured to send logs over UDP/GELF so no additional libraries are necessary on the application side.
   * Single process. Glog-view runs as a single nodejs application and doesn't have any dependencies on other running services. 
   * Low footprint - single nodejs application, consumes 30-130 MB of RAM, compact log file format, efficient and lightweight implementation.  
   * Simple configuration, or no configuration at all. Just install and run, the same procedure on Linux, Windows or Mac OS. 
   * Log rotation. By default Glog-view rotates the log files on a daily basis and allows you to browse all collected files.
-  * Performance: sqlite database is able to store 20-50 thousand records per second so this is the theoretical maximum of what Glog-viewer can handle.
-    Database performance is the key limit here.
+  * Performance: sqlite database is able to store 20-50 thousand records per second so this is the theoretical maximum of what grimlog can handle. With full-text search enabled we're looking at about 10K events/second, maybe more if the machine has fast SSD disk + enough CPU. Database performance is the key limit here and better perf tests are necessary. Anyway, this is much more than logstash + elasticsearch can handle.
+  
 
 # Status
 Currently in alpha, some important parts need to be completed
