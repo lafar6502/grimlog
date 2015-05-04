@@ -47,4 +47,14 @@ List of fields that are handled/understood by grimlog
   * Health check (basic website with some stats/grimlog health information)
  
   
-  
+# Installation
+ 
+## Ubuntu
+
+  * sudo apt-get install sqlite3
+  * make sure you have 'node' link configured in addition to /usr/bin/nodejs that's installed by default. Required to install sqlite3 package correctly. `ln -s /usr/bin/nodejs /usr/local/bin/node` should be sufficient.
+  * clone grimlog repository (git clone git://....)
+  * npm install 
+  * `nodejs server.js` to run the app
+
+    
