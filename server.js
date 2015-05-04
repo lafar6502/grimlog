@@ -20,7 +20,11 @@ var lc = glog.createLogCollector({
 lc.start();
 app.set('logCollector', lc);
 
-
+var stats = {
+    receivedMessages: 0,
+    errors: 0
+};
+app.set('stats', stats);
     
 eventHub.on('gelfMessage', function(m) {
     //convert gelf message into glog event (implemented elsewhere)
@@ -34,6 +38,16 @@ eventHub.on('udpMessage', function(m) {
 eventHub.on('glogEvent', function(m) {
     lc.addEvent(m);
 });
+
+eventHub.on('glogEvent', function(m) {
+    stats.receivedMessages++;
+});
+
+eventHub.on('messageError', function(m) {
+    stats.errors++;
+});
+
+
 
 var gelfsrv = null;
 if (_.isNumber(cfg.gelfPort)) {

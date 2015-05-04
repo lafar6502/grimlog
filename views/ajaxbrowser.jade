@@ -41,10 +41,12 @@ block content
             };
             
             if (isNum(firstTS) && !dontTouchHH) {
+                /* disable automatic time update
                 var dt = new Date(firstTS);
                 $('#ss').val(twod(dt.getSeconds()));
                 $('#mm').val(twod(dt.getMinutes()));
                 $('#hh').val(twod(dt.getHours()));
+                */
             };
             dontTouchHH = false;
             timeModified = false;
@@ -70,11 +72,11 @@ block content
         
         function doSearch() {
             fstart.val(0);
-            if (!timeModified) {
+            /*if (!timeModified) {
                 $('#hh').val('');
                 $('#mm').val('');
                 $('#ss').val('');
-            };
+            };*/
             frm.submit();
         }
         
