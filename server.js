@@ -8,6 +8,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var _ = require('lodash');
 var dgram = require('dgram');
+var statz = require('./livestats');
 
 var eventHub = new EventEmitter();
 app.set('eventHub', eventHub);
@@ -122,6 +123,9 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+var statc = statz.createStatCollector({
+    eventHub: eventHub
+});
 /**
  * Listen on provided port, on all network interfaces.
  */
