@@ -55,7 +55,7 @@ List of fields that are handled/understood by grimlog
   * make sure you have 'node' link configured in addition to /usr/bin/nodejs that's installed by default. Required to install sqlite3 package correctly. `ln -s /usr/bin/nodejs /usr/local/bin/node` should be sufficient.
   * clone grimlog repository (git clone git://....)
   * npm install 
-  * `nodejs server.js` to run the app
+  * `nodejs server.js` to run the app (or `npm start`)
 
     
 ## Windows
@@ -63,5 +63,5 @@ List of fields that are handled/understood by grimlog
   * install nodejs
   * clone grimlog git repository
   * npm install
-  * `node server.js` - to run from command line
-  * in order to run grimlog as a windows service: TODO
+  * `node server.js` - to run from command line (`npm start` should work too)
+  * in order to run grimlog as a windows service please install it with `npm run-script install-windows-service` (you need to run the command as administrator). Then 'grimlog' windows service will be created and you should be able to start it.
