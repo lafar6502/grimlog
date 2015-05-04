@@ -30,7 +30,7 @@ List of fields that are handled/understood by grimlog
 * correlation - correlation id that joins group of messages (_correlation in GELF) - optional
 
 # TODO List - ideas, plans    
-  * Full-text search (currently only normal sql queries are used) 
+  * ~~Full-text search (currently only normal sql queries are used)~~ - DONE
   * More transport options (ZeroMQ, TCP)
   * Event parsing/pre-processing so we can handle other message formats as well
   * Event filtering so we can decide whether events will be logged or not
@@ -58,3 +58,10 @@ List of fields that are handled/understood by grimlog
   * `nodejs server.js` to run the app
 
     
+## Windows
+
+  * install nodejs
+  * clone grimlog git repository
+  * npm install
+  * `node server.js` - to run from command line
+  * in order to run grimlog as a windows service: TODO
