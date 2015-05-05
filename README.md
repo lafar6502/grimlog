@@ -45,6 +45,8 @@ List of fields that are handled/understood by grimlog
   * User authentication - via some external auth mechanism
   * Reading logs from text files, tailing text log files and parsing events from them
   * Health check (basic website with some stats/grimlog health information)
+  * Add two (+/-) columns for extracting values from messages with regexp (each column woulh have an option to assign a regexp that would retrieve some value from the message)  - mn
+  * Change layout (two lines by default: first line would have timestamp, level, log name, etc, second line - first line of log message) + expander button - mn
  
   
 # Installation
