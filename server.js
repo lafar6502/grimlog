@@ -5,12 +5,13 @@ var debug = require('debug')('glogv:server');
 var http = require('http');
 var cfg = require('./config.json');
 var EventEmitter = require('events').EventEmitter;
+var asevents = require('./asyncevents');
 var util = require('util');
 var _ = require('lodash');
 var dgram = require('dgram');
 var statz = require('./livestats');
 
-var eventHub = new EventEmitter();
+var eventHub = asevents.globalEventHub;
 app.set('eventHub', eventHub);
 console.log('configuring log collector', cfg);
 var lc = glog.createLogCollector({
