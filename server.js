@@ -1,5 +1,4 @@
 var glog = require('glog');
-var gelfserver = require('graygelf/server');
 var app = require('./app');
 var debug = require('debug')('glogv:server');
 var http = require('http');
@@ -8,9 +7,8 @@ var EventEmitter = require('events').EventEmitter;
 var asevents = require('./asyncevents');
 var util = require('util');
 var _ = require('lodash');
-var dgram = require('dgram');
 var statz = require('./livestats');
-
+var fs = require('fs');
 var eventHub = asevents.globalEventHub;
 app.set('eventHub', eventHub);
 console.log('configuring log collector', cfg);
@@ -51,64 +49,6 @@ eventHub.on('messageError', function(m) {
 
 
 
-var gelfsrv = null;
-if (_.isNumber(cfg.gelfPort)) {
-    console.log('configuring GELF receiver', cfg.gelfAddress, cfg.gelfPort);
-    gelfsrv = gelfserver();
-    gelfsrv.on('message', function(msg) {
-        if (!_.has(msg, 'level')) msg.level = 'INFO';
-        var m = msg.full_message;
-        if (_.has(msg, 'short_message') && m != msg.short_message) m = msg.short_message + ' \n' + msg.full_message;
-        var ev = {
-            ts: msg.timestamp,
-            message: m,
-            source: msg.source,
-            level: msg.level,
-            send_addr: msg.host,
-            logname: msg._logname || 'gelf',
-            pid: isNaN(msg._pid) ? -1 : msg._pid,
-            threadid: isNaN(msg._threadid) ? -1 : msg._threadid,
-            correlation: _.has(msg, '_correlation') ? msg._correlation : null,
-            seq: msg._seq
-        };
-        if (!_.isString(ev.source)) ev.source = msg.facility;
-        if (!_.isString(ev.source)) ev.source = msg.host;
-        if (isNaN(ev.ts)) ev.ts = new Date().getTime();
-        if (!_.isString(ev.message)) return;
-        eventHub.emit('glogEvent', ev);
-    });
-    gelfsrv.on('error', function(er) {
-        console.log('gelf message error', er);
-        eventHub.emit('messageError', null, er);
-    });
-    gelfsrv.listen(cfg.gelfPort, cfg.gelfAddress);
-    console.log('GELF listening on', gelfsrv.address, gelfsrv.port);
-};
-
-var dgsock = null; //udp socket
-if (_.isNumber(cfg.udpPort)) {
-    var s = dgram.createSocket('udp4');
-
-    s.bind(cfg.udpPort, cfg.listenAddress, function () {
-        console.log('udp bound to ', cfg.listenAddress, cfg.udpPort);
-    });
-
-    s.on('message', function (msg, rinfo) {
-        if (Buffer.isBuffer(msg)) msg = msg.toString();
-        msg = msg.trim();
-        if (msg.length == 0) return;
-        try {
-            var ev = JSON.parse(msg);
-            ev.send_addr = rinfo.address + ':' + rinfo.port;
-            eventHub.emit('glogEvent', ev);
-        }
-        catch(e) {
-            console.log('failed to parse message', msg, e);
-            eventHub.emit('messageError', msg, e);
-        }
-    });
-    dgsock = s;
-};
 
 
 /**
@@ -127,6 +67,54 @@ var server = http.createServer(app);
 var statc = statz.createStatCollector({
     eventHub: eventHub
 });
+
+//load app modules
+
+var mods = fs.readdirSync('app_modules');
+console.log('modules: ', mods);
+var MODULES = [];
+var mcfg = {
+    eventHub: eventHub,
+    config: cfg,
+    app: app,
+    httpServer: server
+};
+
+for(var i=0; i<mods.length; i++) {
+    var fn = './app_modules/' + mods[i];
+    var idx = fn.lastIndexOf('.js');
+    if (idx != fn.length - 3) continue;
+    fn = fn.substr(0, fn.length - 3);
+    console.log('loading', fn);
+    try {
+        var m = require(fn);
+        if (!_.has(m, 'initialize') || !_.isFunction(m.initialize)) {
+            conosle.log('module has no initialize function:', fn);
+            continue;
+        };
+        var m2 = m.initialize(mcfg);
+        m = m2 == undefined || m2 == null ? m : m2;
+        m.name = mods[i].substr(0, mods[i].length - 3);
+        MODULES.push(m);
+    }
+    catch(e) {
+        console.log('error loading', fn, ':', e);
+    }
+};
+
+function callModules(funcName, args) {
+    for (var i=0; i<MODULES.length; i++) {
+        var m = MODULES[i];
+        if (!_.has(m, funcName) || !_.isFunction(m[funcName])) {
+            console.log('module ', m.name, 'has no ', funcName, 'function');
+            continue;
+        }
+        m[funcName].apply(m, args);
+    };
+};
+
+callModules('start', []);
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -135,6 +123,9 @@ server.listen(port, cfg.httpAddress);
 
 server.on('error', onError);
 server.on('listening', onListening);
+
+
+
 
 /**
  * Normalize a port into a number, string, or false.
@@ -195,3 +186,4 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
