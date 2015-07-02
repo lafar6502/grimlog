@@ -105,8 +105,27 @@ function Metric(cfg) {
 	return this;
 };
 
+var _globalMetrics = {};
+
 module.exports = {
-	Metric: Metric
+	Metric: Metric,
+    
+    updateMetric: function(name, value) {
+        if (!_.has(_globalMetrics, name)) {
+            var m = new Metric({name: name});
+            _globalMetrics[name] = m;
+        };
+        var m = _globalMetrics[name];
+        m.update(value);
+    },
+    
+    getMetric: function(name) {
+        return _globalMetrics[name];
+    },
+    
+    getMetricNames: function() {
+        return _.keys(_globalMetrics);
+    }
 };
 
 /*

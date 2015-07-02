@@ -42,7 +42,7 @@ module.exports = {
             return;
         };
         
-        var gr = new UdpReceiver(cfg.config);
+        var gr = new UdpReceiver(cfg.config, cfg.eventHub);
         return gr;
     },
     

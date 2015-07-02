@@ -9,6 +9,7 @@ var util = require('util');
 var _ = require('lodash');
 var statz = require('./livestats');
 var fs = require('fs');
+
 var eventHub = asevents.globalEventHub;
 app.set('eventHub', eventHub);
 console.log('configuring log collector', cfg);
@@ -26,11 +27,6 @@ var stats = {
 };
 app.set('stats', stats);
     
-eventHub.on('gelfMessage', function(m) {
-    //convert gelf message into glog event (implemented elsewhere)
-    throw new Error('not imp');
-});
-
 eventHub.on('udpMessage', function(m) {
     eventHub.emit('glogEvent', m);
 });
@@ -48,13 +44,9 @@ eventHub.on('messageError', function(m) {
 });
 
 
-
-
-
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(cfg.httpPort || '3000');
 app.set('port', port);
 
@@ -79,7 +71,6 @@ var mcfg = {
     app: app,
     httpServer: server
 };
-
 for(var i=0; i<mods.length; i++) {
     var fn = './app_modules/' + mods[i];
     var idx = fn.lastIndexOf('.js');
@@ -89,7 +80,7 @@ for(var i=0; i<mods.length; i++) {
     try {
         var m = require(fn);
         if (!_.has(m, 'initialize') || !_.isFunction(m.initialize)) {
-            conosle.log('module has no initialize function:', fn);
+            console.log('module has no initialize function:', fn);
             continue;
         };
         var m2 = m.initialize(mcfg);
@@ -114,10 +105,6 @@ function callModules(funcName, args) {
 };
 
 callModules('start', []);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
 
 server.listen(port, cfg.httpAddress);
 

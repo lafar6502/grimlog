@@ -53,7 +53,7 @@ module.exports = {
             return;
         };
         
-        var gr = new GelfUdpReceiver(cfg.config);
+        var gr = new GelfUdpReceiver(cfg.config, cfg.eventHub);
         return gr;
     },
     
