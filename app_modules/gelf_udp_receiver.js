@@ -6,18 +6,26 @@ function GelfUdpReceiver(cfg, eventHub) {
     var gelfsrv = gelfserver();
     var running = false;
     gelfsrv.on('message', function(msg) {
+        //console.log('m',msg);
+        eventHub.emit('preprocessMessage', msg, this);
+        if (msg.SKIP === true) return; //skip message
         
         if (!_.has(msg, 'level')) msg.level = 'INFO';
         var m = msg.short_message || '';
-        var fm = msg.full_message;
-        if (fm != undefined && fm != null && fm != '') m = m + '\n' + fm;
+        if (_.isString(msg.full_message) && msg.full_message.length > 0) {
+            if (m == '') 
+                m = msg.full_message;
+            else
+                m = msg.full_message.indexOf(m) < 0 ? m + '\n' + msg.full_message : msg.full_message;
+        };
+        
         var ev = {
             ts: msg.timestamp,
             message: m,
             source: msg.source,
             level: msg.level,
             send_addr: msg.host,
-            logname: msg._logname || 'gelf',
+            logname: msg._logname || msg._facility || msg._ident || 'gelf',
             pid: isNaN(msg._pid) ? -1 : msg._pid,
             threadid: isNaN(msg._threadid) ? -1 : msg._threadid,
             correlation: _.has(msg, '_correlation') ? msg._correlation : null,
