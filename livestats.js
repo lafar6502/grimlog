@@ -66,7 +66,7 @@ function StatCollector(cfg) {
         secStats.total++;
         minuteStats.total++;
         //console.log(ge);
-        if (ge.level.toUpperCase() == 'ERROR') {
+        if (_.isString(ge.level) && ge.level.toUpperCase() == 'ERROR') {
             secStats.errors++;
             minuteStats.errors++;
         };

@@ -6,9 +6,11 @@ function GelfUdpReceiver(cfg, eventHub) {
     var gelfsrv = gelfserver();
     var running = false;
     gelfsrv.on('message', function(msg) {
+        
         if (!_.has(msg, 'level')) msg.level = 'INFO';
-        var m = msg.full_message;
-        if (_.has(msg, 'short_message') && m != msg.short_message) m = msg.short_message + ' \n' + msg.full_message;
+        var m = msg.short_message || '';
+        var fm = msg.full_message;
+        if (fm != undefined && fm != null && fm != '') m = m + '\n' + fm;
         var ev = {
             ts: msg.timestamp,
             message: m,

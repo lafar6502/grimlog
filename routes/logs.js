@@ -54,7 +54,7 @@ function isNum(n) {
 router.get('/', function(req, res, next) {
     getLogFileIds(true, function(s, fl) {
         if (!s) {
-            res.error();
+            res.status(500).end(fl);
             return;
         } else {
             res.render('loglist', { files:  fl});
