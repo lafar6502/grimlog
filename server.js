@@ -1,4 +1,4 @@
-var glog = require('glog');
+var glog = require('./libs/logcollector');
 var app = require('./app');
 var debug = require('debug')('glogv:server');
 var http = require('http');

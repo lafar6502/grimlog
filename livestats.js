@@ -2,7 +2,7 @@
 // calculates live log event stats and makes them available via web sockets
 // 
 var _ = require('lodash');
-var cb = require('./circular');
+var cb = require('./libs/circular');
 var asevents = require('./asyncevents');
 // TODO statistics for rrdtool
 /* how?
