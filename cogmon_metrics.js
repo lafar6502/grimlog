@@ -1,4 +1,4 @@
-var cb = require('./circular');
+var cb = require('./libs/circular');
 var _ = require('lodash');
 
 function Metric(cfg) {

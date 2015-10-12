@@ -33,7 +33,7 @@ function GelfUdpReceiver(cfg, eventHub) {
             logname: msg._logname || msg._facility || msg._ident || 'gelf',
             pid: isNaN(msg._pid) ? -1 : msg._pid,
             threadid: isNaN(msg._threadid) ? -1 : msg._threadid,
-            correlation: _.has(msg, '_correlation') ? msg._correlation : null,
+            correlation: msg._correlation || msg._uuid || '',
             seq: msg._seq
         };
         if (!_.isString(ev.source)) ev.source = msg.facility;

@@ -9,10 +9,26 @@ block content
     button.btn.btn-default.navbar-btn(type='button') B2
     
   div.container-fluid
-      h1= title
-      p Welcome to #{title}
-      ul
-        each f in files
-            li
-                a(href='./browser/' + f)=f
-        
+    div.row
+        div.col-xs-6
+            h1 Log files
+            ul
+                each f in files
+                    li
+                        a(href='./browser/' + f)=f
+
+        div.col-xs-6
+            div(class='panel panel-default')
+                div.panel-heading   Status info
+                div.panel-body
+                    table(class='table table-striped')
+                        tbody
+                            tr
+                                td Timezone
+                                td #{cfg.timeZone}
+                            tr
+                                td UDP port
+                                td #{cfg.udpPort}
+                            tr
+                                td Gelf port
+                                td #{cfg.gelfPort}

@@ -1,4 +1,4 @@
-var glog = require('glog');
+var glog = require('./libs/logcollector');
 var app = require('./app');
 var debug = require('debug')('glogv:server');
 var http = require('http');
@@ -12,6 +12,7 @@ var fs = require('fs');
 
 var eventHub = asevents.globalEventHub;
 app.set('eventHub', eventHub);
+app.set('cfg', cfg);
 console.log('configuring log collector', cfg);
 var lc = glog.createLogCollector({
     fileName: cfg.fileName,
