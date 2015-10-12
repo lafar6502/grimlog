@@ -1,12 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var glog = require('../libs/logcollector');
+var glog = require('../libs/logrepo');
 var _ = require('lodash');
 var path = require('path');
 var moment = require('moment');
+var mtz = require('moment-timezone');
+var log4js = require('log4js');
+var cfg = require('../config.json');
 
 var logdir = __dirname + '/../../glogs/';
+var log = log4js.getLogger('logs.js');
 
 function getLogFileIds(withFileInfo, callback) {
     fs.readdir(logdir, function(err, files) {
@@ -57,7 +61,7 @@ router.get('/', function(req, res, next) {
             res.status(500).end(fl);
             return;
         } else {
-            res.render('loglist', { files:  fl});
+            res.render('loglist', { files:  fl, cfg: cfg});
         }
     });
 });
@@ -110,7 +114,7 @@ router.get('/query/:id', function(req, res, next) {
         stime = dt.getTime(); //parseInt(req.query.baseDate) + (parseInt(req.query.hh) * 3600 + parseInt(req.query.mm) * 60 + parseInt(req.query.ss)) * 1000;
     };
     
-    console.log('stime: ', stime, 'q.st', isNaN(req.query.startTime), ' - ', req.query.startTime);
+    log.info('stime: ', stime, 'q.st', isNaN(req.query.startTime), ' - ', req.query.startTime);
     var dquery = {
         level: req.query.level,
         logname: req.query.logname,
@@ -211,7 +215,7 @@ router.get('/showlog/:id', function(req, res, next) {
             r.form.ss = t0.getSeconds();
         }
         _.forEach(r.data, function(e) {
-            e.tsf = moment(e.ts).format('HH:mm:ss.SSS');
+            e.tsf = moment(e.ts).tz(cfg.timeZone || 'UTC').format('HH:mm:ss.SSS');
         });
         res.render('showlog', r);
     });

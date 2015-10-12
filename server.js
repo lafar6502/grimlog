@@ -12,6 +12,7 @@ var fs = require('fs');
 
 var eventHub = asevents.globalEventHub;
 app.set('eventHub', eventHub);
+app.set('cfg', cfg);
 console.log('configuring log collector', cfg);
 var lc = glog.createLogCollector({
     fileName: cfg.fileName,
