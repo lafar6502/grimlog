@@ -1,5 +1,6 @@
 {
     "description": "grimlog config file",
+    "logGelfMessages": true,
     "fileName": "../glogs/grimlog_",
     "fileDateFormat": "YYYY-MM-DD",
     "udpPort": 12020,

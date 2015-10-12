@@ -1,5 +1,7 @@
 var _ = require('lodash');
 var gelfserver = require('graygelf/server');
+var log4js = require('log4js');
+var log = log4js.getLogger('gelf_udp_recv');
 
 function GelfUdpReceiver(cfg, eventHub) {
     console.log('configuring GELF receiver', cfg.gelfAddress, cfg.gelfPort);
@@ -7,7 +9,10 @@ function GelfUdpReceiver(cfg, eventHub) {
     var running = false;
     gelfsrv.on('message', function(msg) {
         //console.log('m',msg);
-        eventHub.emit('preprocessMessage', msg, this);
+        if (cfg.logGelfMessages) {
+		log.info('m', msg);
+	};
+	eventHub.emit('preprocessMessage', msg, this);
         if (msg.SKIP === true) return; //skip message
         
         if (!_.has(msg, 'level')) msg.level = 'INFO';
