@@ -1,6 +1,6 @@
 {
-    "logInputMessages": false,
-    "timeZone": "UTC", 
+    "logGelfMessages": true,
+    "timeZone": "CEST", 
     "description": "grimlog config file",
     "logGelfMessages": true,
     "fileName": "../glogs/grimlog_",
