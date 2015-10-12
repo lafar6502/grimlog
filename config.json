@@ -1,6 +1,6 @@
 {
     "logInputMessages": false,
-    "timeZone": "",
+    "timeZone": "UTC", 
     "description": "grimlog config file",
     "fileName": "../glogs/grimlog_",
     "fileDateFormat": "YYYY-MM-DD",

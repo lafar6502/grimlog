@@ -2,6 +2,7 @@ var sqli = require('sqlite3').verbose();
 var _ = require('lodash');
 var fs = require('fs');
 var moment = require('moment');
+var mtz = require('moment-timezone');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
@@ -52,7 +53,7 @@ function LogRepository(cfg) {
     var getDbFileName = function() {
         var fn = cfg.fileName;
         if (_.has(cfg, 'fileDateFormat')) {
-            fn = fn + new moment().format(cfg.fileDateFormat);
+            fn = fn + new moment().tz(cfg.timeZone || 'UTC').format(cfg.fileDateFormat);
         };
         fn += ".db3";
         return fn;
@@ -254,7 +255,7 @@ function LogSearcher(cfg) {
         
         var getTS = function(v) {
             if (isNaN(v)) {
-                var ts = moment(v).valueOf();
+                var ts = moment.tz(v, cfg.timeZone || 'UTC').valueOf();
                 if (isNaN(ts)) throw new Error('timestamp invalid');
                 return ts;
             } else {
@@ -333,7 +334,7 @@ function LogSearcher(cfg) {
                 var hasMore = rows.length > limit;
                 if (hasMore) rows = rows.slice(0, -1);
                 _.forEach(rows, function(r) {
-                    r.time = moment(new Date(r.ts)).format('YYYY-MM-DD HH:mm:ss.SSS');
+                    r.time = moment.tz(r.ts, cfg.timeZone || 'UTC').format('YYYY-MM-DD HH:mm:ss.SSS');
                     r.level = getLogLevelName(r.level);
                 });
                 var ret = {
