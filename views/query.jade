@@ -16,10 +16,12 @@ block content
                     tr(id='_r_'+m.entryid, class='lvl_' + m.level.toLowerCase())
                         td 
                             | #{m.tsf}|#{m.level}|
-                            a P#{m.pid}|
-                            a T#{(m.threadid < 0 ? 0 : m.threadid)}| 
-                            a C#{m.correlation}|
-                            | #{m.logname}| #{m.source}| #{m.uid}
+                            a P#{m.pid}
+                            ||
+                            a T#{(m.threadid < 0 ? 0 : m.threadid)}
+                            ||
+                            a C#{m.correlation}
+                            || #{m.logname}| #{m.source}|| #{m.uid}
                         td=m.message
             
                  

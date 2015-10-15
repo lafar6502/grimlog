@@ -67,6 +67,13 @@ block content
                     doSearch();
                     return;
                 };
+                m = a.text.match(/^C(.+)/);
+                if (m != null) {
+                    var f = frm.find('input[name=correlation]');
+                    f.val(m[1]);
+                    doSearch();
+                    return;
+                };
             });
         };
         

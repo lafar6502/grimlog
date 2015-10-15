@@ -1,6 +1,6 @@
 {
     "logGelfMessages": true,
-    "timeZone": "CEST", 
+    "timeZone": "Europe/Warsaw", 
     "description": "grimlog config file",
     "logGelfMessages": true,
     "fileName": "../glogs/grimlog_",

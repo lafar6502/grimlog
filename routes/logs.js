@@ -156,7 +156,7 @@ router.get('/query/:id', function(req, res, next) {
             r.form.ss = t0.getSeconds();
         }
         _.forEach(r.data, function(e) {
-            e.tsf = moment(e.ts).format('HH:mm:ss.SSS');
+            e.tsf = moment.tz(e.ts, cfg.timeZone || 'UTC').format('HH:mm:ss.SSS');
         });
         res.render('query', r);
     });
@@ -215,7 +215,7 @@ router.get('/showlog/:id', function(req, res, next) {
             r.form.ss = t0.getSeconds();
         }
         _.forEach(r.data, function(e) {
-            e.tsf = moment(e.ts, cfg.timeZone || 'UTC').format('HH:mm:ss.SSS');
+            e.tsf = moment.tz(e.ts, cfg.timeZone || 'UTC').format('HH:mm:ss.SSS');
         });
         res.render('showlog', r);
     });
