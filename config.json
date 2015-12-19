@@ -10,5 +10,8 @@
     "gelfPort": 12201,
     "gelfAddress": "0.0.0.0",
     "httpPort" : 8001,
-    "httpAddress": "0.0.0.0"
+    "httpAddress": "0.0.0.0",
+    "clients":[
+        {"user":"logs","password":"logmein"}
+    ]
 }

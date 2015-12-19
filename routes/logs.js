@@ -8,7 +8,7 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var log4js = require('log4js');
 var cfg = require('../config.json');
-
+var auth = require('../basicauth');
 var logdir = __dirname + '/../../glogs/';
 var log = log4js.getLogger('logs.js');
 
@@ -55,7 +55,7 @@ function isNum(n) {
 
 
 /* GET logs listing. */
-router.get('/', function(req, res, next) {
+router.get('/', auth, function(req, res, next) {
     getLogFileIds(true, function(s, fl) {
         if (!s) {
             res.status(500).end(fl);
@@ -85,15 +85,15 @@ function switchFile(id, moveNext, req, res, next) {
     });
 };
 
-router.get('/nextFile/:id', function(req, res, next) {
+router.get('/nextFile/:id', auth, function(req, res, next) {
     switchFile(req.params.id, true, req, res, next);
 });
 
-router.get('/prevFile/:id', function(req, res, next) {
+router.get('/prevFile/:id', auth, function(req, res, next) {
     switchFile(req.params.id, false, req, res, next);
 });
 
-router.get('/query/:id', function(req, res, next) {
+router.get('/query/:id', auth, function(req, res, next) {
     var fid = req.params.id;
     if (fid.indexOf('.db3') < 0) fid += '.db3';
     var lr = glog.openLogSearcher({
@@ -163,7 +163,7 @@ router.get('/query/:id', function(req, res, next) {
     
 });
 
-router.get('/browser/:id', function(req, res, next) {
+router.get('/browser/:id', auth, function(req, res, next) {
     
     var r = {
         query: req.query,
@@ -175,7 +175,7 @@ router.get('/browser/:id', function(req, res, next) {
 
 });
 
-router.get('/showlog/:id', function(req, res, next) {
+router.get('/showlog/:id', auth, function(req, res, next) {
     var fid = req.params.id;
     if (fid.indexOf('.db3') < 0) fid += '.db3';
     var lr = glog.openLogSearcher({
