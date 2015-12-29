@@ -10,9 +10,9 @@ function GelfUdpReceiver(cfg, eventHub) {
     gelfsrv.on('message', function(msg) {
         //console.log('m',msg);
         if (cfg.logGelfMessages) {
-		log.info('m', msg);
-	};
-	eventHub.emit('preprocessMessage', msg, this);
+            log.info('m', msg);
+        };
+        eventHub.emit('preprocessMessage', msg, this);
         if (msg.SKIP === true) return; //skip message
         
         if (!_.has(msg, 'level')) msg.level = 'INFO';
