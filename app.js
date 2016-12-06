@@ -8,6 +8,7 @@ var asevents = require('./asyncevents');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var logs = require('./routes/logs');
+var nlog = require('./routes/nlog');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use('/rc', express.static(__dirname + '/../node_modules/bootstrap/dist'));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/logs', logs);
+app.use('/nlog', nlog);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
