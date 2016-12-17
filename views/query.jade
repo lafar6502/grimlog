@@ -14,8 +14,7 @@ block content
             table(class='table table-striped table-condensed log_table')
                 each m in data
                     tr(id='_r_'+m.entryid, class='lvl_' + m.level.toLowerCase())
-                        td 
-                            | #{m.tsf}|#{m.level}|
+                        td| #{m.tsf}|#{m.level}|
                             a P#{m.pid}
                             ||
                             a T#{(m.threadid < 0 ? 0 : m.threadid)}
