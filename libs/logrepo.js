@@ -242,6 +242,8 @@ function LogSearcher(cfg) {
     });
     
     
+    
+    
     this.search = function(query, start, limit, sort, dir, opts, callback) {
         if (isNaN(start)) start = 0;
         if (isNaN(limit)) limit = 100;
@@ -372,6 +374,76 @@ function LogSearcher(cfg) {
     };
 };
 
+
+function LogsHelper(cfg) {
+    var me = this;
+    
+    this.queryDb = function(dbFile, sql, paramz, callback) {
+        var db = new sqli.Database(dbFile, sqli.OPEN_READONLY, function(err) {
+            if (err) {
+                console.log('db err', arguments);
+                callback.apply(arguments);
+                return;
+            }
+            
+            db.all(sql, paramz, function(err, rows) {
+                db.close();
+                if (err) {
+                    console.log('query err', arguments, sql, paramz);
+                    callback.apply(arguments);
+                    return;
+                }
+                var ret = {
+                    data: rows,
+                    sql: sql, 
+                    dbFile: dbFile, 
+                    paramz: paramz
+                };
+                callback(false, ret);
+            });
+        });
+    };
+    
+    this.searchAllLogs = function(sql, paramz, dataFiles, callback) {
+       if (!_.isArray(dataFiles)) {
+           if (_.isString(dataFiles)) {
+                var fnames = fs.readdirSync(dataFiles);
+                fnames = _.filter(fnames, function(f) {
+                    return _.endsWith(f, '.db3') || _.endsWith(f, '.db') || _.endsWith(f, '.sqlite');
+                });
+                fnames = _.map(fnames, function(f) {
+                    return dataFiles + '\\' + f;
+                });
+                dataFiles = fnames;
+           }
+           else throw new Error("error");
+        }
+        //console.log('my files', dataFiles);
+        
+        var theData = {};
+        
+        var left = dataFiles.length;
+        _.each(dataFiles, function(f) {
+            me.queryDb(f, sql, paramz, function(err, dt) {
+                left--;
+                //console.log('got result for', f, err);
+               if (err) {
+                   console.log('query failed for', f, dt);
+                   theData[f] = {success: false, error: dt};
+               } 
+               else {
+                   theData[f] = {success: true, data: dt.data};
+               }
+               if (left == 0) {
+                   callback(theData);
+               }
+            });
+        });
+
+    }
+    
+}
+
 util.inherits(LogRepository, EventEmitter);
 
 module.exports = {
@@ -380,6 +452,9 @@ module.exports = {
 	},
     openLogSearcher: function(cfg) {
         return new LogSearcher(cfg);
+    },
+    getDataHelper: function(cfg) {
+        return new LogsHelper(cfg);
     },
     getLogLevelName: getLogLevelName,
     getLogLevelId: getLogLevelId
